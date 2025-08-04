@@ -2,47 +2,779 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Safeco Web-to-Lead Form</title>
+    <title>Safeco Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"
+    />
     <style>
       .hidden {
         display: none;
       }
-      .error {
-        border-color: #ef4444;
-      }
-      .error-message {
+      .star {
         color: #ef4444;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
+        margin-left: 2px;
+      }
+      .modal-bg {
+        background: rgba(0, 0, 0, 0.4);
+      }
+      /* Tooltip style for Roadside Assistance description */
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 320px;
+        background-color: #f9fafb;
+        color: #1f2937;
+        text-align: left;
+        border-radius: 6px;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -160px;
+        font-size: 0.85rem;
+        line-height: 1.3;
+        box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+      }
+      .tooltip:hover .tooltiptext,
+      .tooltip:focus-within .tooltiptext {
+        visibility: visible;
+      }
+      /* Highlight missing fields on dialog (optional) */
+      .missing-point {
+        font-style: italic;
+        color: #b91c1c;
       }
     </style>
   </head>
   <body class="bg-gray-100 flex items-center justify-center min-h-screen p-6">
     <form
+      id="mainForm"
       action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DU7000006EuID"
       method="POST"
-      class="bg-white p-8 rounded-2xl shadow-md w-full max-w-xl space-y-6"
-      id="mainForm"
+      class="bg-white p-8 rounded-2xl shadow-md w-full max-w-xl space-y-8 relative"
       autocomplete="off"
+      novalidate
     >
-      <h2 class="text-2xl font-bold text-center text-gray-800">Safeco Form</h2>
+      <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+        Safeco Form
+      </h2>
 
-      <!-- Email Block -->
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-700"
-          >Email</label
-        >
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
+      <!-- Policy Changes Section -->
+      <section
+        class="bg-gray-50 border rounded-xl p-6 shadow-inner"
+        aria-label="Policy Changes Section"
+      >
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Policy Changes</h3>
 
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email<span class="star">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            autocomplete="off"
+          />
+        </div>
+
+        <fieldset class="mb-4">
+          <legend class="block text-sm font-medium text-gray-700 mb-1">
+            Is this a quote or a change request?<span class="star">*</span>
+          </legend>
+          <div class="flex space-x-6">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006IOzh"
+                value="Y"
+                class="mr-2"
+              />Yes
+            </label>
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006IOzh"
+                value="N"
+                class="mr-2"
+              />No
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000005zuNN"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Policy Action<span class="star">*</span>
+          </label>
+          <select
+            id="00NU7000005zuNN"
+            name="00NU7000005zuNN"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Replace Vehicle">Replace Vehicle</option>
+            <option value="Add Vehicle">Add Vehicle</option>
+            <option value="Remove Vehicle">Remove Vehicle</option>
+            <option value="Add Driver">Add Driver</option>
+            <option value="Remove Driver">Remove Driver</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000005zuX3"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Policy Number<span class="star">*</span>
+          </label>
+          <input
+            type="text"
+            id="00NU7000005zuX3"
+            name="00NU7000005zuX3"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000005zuLl"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Effective Date (MM/DD/YYYY)<span class="star">*</span>
+          </label>
+          <input
+            type="text"
+            id="00NU7000005zuLl"
+            name="00NU7000005zuLl"
+            placeholder="MM/DD/YYYY"
+            maxlength="10"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            autocomplete="off"
+          />
+        </div>
+      </section>
+
+      <!-- Vehicle Details Section -->
+      <section
+        class="bg-gray-50 border rounded-xl p-6 shadow-inner"
+        aria-label="Vehicle Details Section"
+      >
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">
+          Vehicle Details
+        </h3>
+
+        <!-- VIN Old Vehicle - radio -->
+        <fieldset class="mb-4">
+          <legend class="block text-sm font-medium text-gray-700 mb-1">
+            Do you know the VIN of the Old Vehicle?<span class="star">*</span>
+          </legend>
+          <div class="flex space-x-6">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006DHIv"
+                value="Y"
+                class="mr-2"
+              />Yes
+            </label>
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006DHIv"
+                value="N"
+                class="mr-2"
+              />No
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="mb-4">
+          <label
+            for="00NU700000616Sv"
+            class="block text-sm font-medium text-gray-700"
+          >
+            VIN Number of Old Vehicle<span class="star">*</span>
+          </label>
+          <input
+            id="00NU700000616Sv"
+            name="00NU700000616Sv"
+            maxlength="255"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- VIN New Vehicle - radio -->
+        <fieldset class="mb-4">
+          <legend class="block text-sm font-medium text-gray-700 mb-1">
+            Do you know the VIN of the New Vehicle?<span class="star">*</span>
+          </legend>
+          <div class="flex space-x-6">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006NiT7"
+                value="Y"
+                class="mr-2"
+              />Yes
+            </label>
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006NiT7"
+                value="N"
+                class="mr-2"
+              />No
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006Knh3"
+            class="block text-sm font-medium text-gray-700"
+          >
+            VIN Number of New Vehicle<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000006Knh3"
+            name="00NU7000006Knh3"
+            maxlength="255"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006N0iD"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Is the vehicle used to commute to work/ school?<span class="star"
+              >*</span
+            >
+          </label>
+          <select
+            id="00NU7000006N0iD"
+            name="00NU7000006N0iD"
+            title="Vehicle Use"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Pleasure or Work/School &lt; 4 miles">
+              Pleasure or Work/School &lt; 4 miles
+            </option>
+            <option value="Work/School 4 or more miles">
+              Work/School 4 or more miles
+            </option>
+            <option value="Business Use">Business Use</option>
+            <option value="Show Use">Show Use</option>
+            <option value="Farm Use">Farm Use</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006N0wj"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Ownership<span class="star">*</span>
+          </label>
+          <select
+            id="00NU7000006N0wj"
+            name="00NU7000006N0wj"
+            title="Ownership"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Owned">Owned</option>
+            <option value="Financed">Financed</option>
+            <option value="Leased">Leased</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006N0zx"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Annual Miles<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000006N0zx"
+            name="00NU7000006N0zx"
+            maxlength="255"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <fieldset class="mb-4">
+          <legend class="block text-sm font-medium text-gray-700 mb-1">
+            Vehicle purchased new?<span class="star">*</span>
+          </legend>
+          <div class="flex space-x-6">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006N1MX"
+                value="Y"
+                class="mr-2"
+              />Yes
+            </label>
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006N1MX"
+                value="N"
+                class="mr-2"
+              />No
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006N1Pl"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Years Vehicle Owned<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000006N1Pl"
+            name="00NU7000006N1Pl"
+            maxlength="255"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+      </section>
+
+      <!-- Coverages Section -->
+      <section
+        class="bg-gray-50 border rounded-xl p-6 shadow-inner"
+        aria-label="Coverages Section"
+      >
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">
+          Policy Coverages
+        </h3>
+
+        <div class="mb-4 tooltip" tabindex="0">
+          <label
+            for="00NU7000006NdwT"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Comprehensive Deductible
+          </label>
+          <select
+            id="00NU7000006NdwT"
+            name="00NU7000006NdwT"
+            title="Comprehensive Deductible"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="100">100</option>
+            <option value="100 w/Glass">100 w/Glass</option>
+            <option value="250">250</option>
+            <option value="250 w/Glass">250 w/Glass</option>
+            <option value="500">500</option>
+            <option value="500 w/Glass">500 w/Glass</option>
+            <option value="750">750</option>
+            <option value="750 w/Glass">750 w/Glass</option>
+            <option value="1000">1000</option>
+          </select>
+        </div>
+
+        <div class="mb-4 tooltip" tabindex="0" id="collisionDeductibleWrapper">
+          <label
+            for="00NU7000006Ne7l"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Collision Deductible
+          </label>
+          <select
+            id="00NU7000006Ne7l"
+            name="00NU7000006Ne7l"
+            title="Collision Deductible"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+            <option value="750">750</option>
+            <option value="1000">1000</option>
+            <option value="1500">1500</option>
+            <option value="2000">2000</option>
+          </select>
+          <div class="tooltiptext">
+            Vehicle with Loss Payee Additional Interest must have Comprehensive
+            Deductible or Collision Deductible Coverage or change the Interest
+            Type.
+          </div>
+        </div>
+
+        <div class="mb-4 tooltip" tabindex="0" id="roadsideAssistanceWrapper">
+          <label
+            for="00NU7000006NeZB"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Roadside Assistance
+          </label>
+          <select
+            id="00NU7000006NeZB"
+            name="00NU7000006NeZB"
+            title="Roadside Assistance"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="EAP">EAP</option>
+            <option value="Roadside Assistance">Roadside Assistance</option>
+          </select>
+          <div class="tooltiptext">
+            <strong>EAP:</strong> includes Emergency expenses, Disabled vehicle-
+            transportation expense, Key lockout-RV, Personal Property Coverage,
+            Roadside assistance.<br /><br />
+            <strong>Roadside Assistance:</strong> 1 hour of labor at scene,
+            battery jump start, flat tire change, emergency fuel and fluid
+            delivery (customer pays for cost of fuel/fluid), lockout assistance,
+            towing to nearest repair facility, winching for up to 100 ft from
+            road.<br /><br />
+            When Roadside Assistance is <em>EAP</em>, Comprehensive Deductible
+            and Collision Deductible can’t be none, and Loss of Use must be
+            35/per day or above.
+          </div>
+        </div>
+
+        <div class="mb-4 tooltip" tabindex="0" id="lossOfUseWrapper">
+          <label
+            for="00NU7000006Nenh"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Loss of Use
+          </label>
+          <select
+            id="00NU7000006Nenh"
+            name="00NU7000006Nenh"
+            title="Loss of Use"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="25/per day">25/per day</option>
+            <option value="35/per day">35/per day</option>
+            <option value="50/per day">50/per day</option>
+            <option value="75/per day">75/per day</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006Nf8f"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Auto Loan/Lease Coverage
+          </label>
+          <select
+            id="00NU7000006Nf8f"
+            name="00NU7000006Nf8f"
+            title="Auto Loan/Lease Coverage"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006Ngj4"
+            class="block text-sm font-medium text-gray-700"
+          >
+            A/V &amp; Customized Equipment
+          </label>
+          <select
+            id="00NU7000006Ngj4"
+            name="00NU7000006Ngj4"
+            title="A/V &amp; Customized Equipment"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+            <option value="1500">1500</option>
+            <option value="2000">2000</option>
+            <option value="2500">2500</option>
+            <option value="3000">3000</option>
+            <option value="3500">3500</option>
+            <option value="4000">4000</option>
+            <option value="4500">4500</option>
+            <option value="5000">5000</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006NiHp"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Original Parts Replacement / OEM
+          </label>
+          <select
+            id="00NU7000006NiHp"
+            name="00NU7000006NiHp"
+            title="Original Parts Replacement / OEM"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006NiOH"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Lmtd Rideshare &amp; Delivery Network
+          </label>
+          <select
+            id="00NU7000006NiOH"
+            name="00NU7000006NiOH"
+            title="Lmtd Rideshare &amp; Delivery Network"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Additional Interest Section (initially hidden) -->
+      <section
+        id="additionalInterestSection"
+        class="bg-gray-50 border rounded-xl p-6 shadow-inner hidden"
+        aria-label="Additional Interest Section"
+      >
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">
+          Additional Interest
+        </h3>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006OUCn"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Interest Type<span class="star">*</span>
+          </label>
+          <select
+            id="00NU7000006OUCn"
+            name="00NU7000006OUCn"
+            title="Interest Type"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Loss Payee">Loss Payee</option>
+            <option value="Additional Interest">Additional Interest</option>
+            <option value="Leasing Company">Leasing Company</option>
+            <option value="Corporate Owned">Corporate Owned</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006YQuN"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Interest Name<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000006YQuN"
+            name="00NU7000006YQuN"
+            maxlength="30"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006YRFF"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Interest Address<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000006YRFF"
+            name="00NU7000006YRFF"
+            maxlength="30"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000006YTXB"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Interest Address Line 2
+          </label>
+          <input
+            id="00NU7000006YTXB"
+            name="00NU7000006YTXB"
+            maxlength="30"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="city" class="block text-sm font-medium text-gray-700">
+            Interest City<span class="star">*</span>
+          </label>
+          <input
+            id="city"
+            name="city"
+            maxlength="40"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000005zvWL"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Interest State<span class="star">*</span>
+          </label>
+          <select
+            id="00NU7000005zvWL"
+            name="00NU7000005zvWL"
+            title="Interest State"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="">--None--</option>
+            <option value="Arizona">Arizona</option>
+            <option value="Florida">Florida</option>
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Alberta">Alberta</option>
+            <option value="Arkansas">Arkansas</option>
+            <option value="British Columbia">British Columbia</option>
+            <option value="California">California</option>
+            <option value="Colorado">Colorado</option>
+            <option value="Connecticut">Connecticut</option>
+            <option value="Delaware">Delaware</option>
+            <option value="Dist Of Columbia">Dist Of Columbia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Guam">Guam</option>
+            <option value="Hawaii">Hawaii</option>
+            <option value="Idaho">Idaho</option>
+            <option value="Illinois">Illinois</option>
+            <option value="Indiana">Indiana</option>
+            <option value="International">International</option>
+            <option value="Iowa">Iowa</option>
+            <option value="Kansas">Kansas</option>
+            <option value="Kentucky">Kentucky</option>
+            <option value="Louisiana">Louisiana</option>
+            <option value="Maine">Maine</option>
+            <option value="Manitoba">Manitoba</option>
+            <option value="Maryland">Maryland</option>
+            <option value="Massachusetts">Massachusetts</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Michigan">Michigan</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Mississippi">Mississippi</option>
+            <option value="Missouri">Missouri</option>
+            <option value="Montana">Montana</option>
+            <option value="Nebraska">Nebraska</option>
+            <option value="Nevada">Nevada</option>
+            <option value="New Brunswick">New Brunswick</option>
+            <option value="New Hampshire">New Hampshire</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="New Mexico">New Mexico</option>
+            <option value="New York">New York</option>
+            <option value="Newfoundland">Newfoundland</option>
+            <option value="North Carolina">North Carolina</option>
+            <option value="North Dakota">North Dakota</option>
+            <option value="Northwest Territories">Northwest Territories</option>
+            <option value="Nova Scotia">Nova Scotia</option>
+            <option value="Ohio">Ohio</option>
+            <option value="Oklahoma">Oklahoma</option>
+            <option value="Ontario">Ontario</option>
+            <option value="Oregon">Oregon</option>
+            <option value="Pennsylvania">Pennsylvania</option>
+            <option value="Prince Edward Island">Prince Edward Island</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="Quebec">Quebec</option>
+            <option value="Rhode Island">Rhode Island</option>
+            <option value="Saskatchewan">Saskatchewan</option>
+            <option value="South Carolina">South Carolina</option>
+            <option value="South Dakota">South Dakota</option>
+            <option value="Tennessee">Tennessee</option>
+            <option value="Texas">Texas</option>
+            <option value="Utah">Utah</option>
+            <option value="Vermont">Vermont</option>
+            <option value="Virgin Islands">Virgin Islands</option>
+            <option value="Virginia">Virginia</option>
+            <option value="Washington">Washington</option>
+            <option value="West Virginia">West Virginia</option>
+            <option value="Wisconsin">Wisconsin</option>
+            <option value="Wyoming">Wyoming</option>
+            <option value="Yukon Territory">Yukon Territory</option>
+            <option value="District of Columbia">District of Columbia</option>
+            <option value="Nunavut">Nunavut</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="00NU7000005zw7R"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Interest Zip Code<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000005zw7R"
+            name="00NU7000005zw7R"
+            size="20"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+      </section>
+
+      <!-- Hidden Salesforce fields -->
       <input type="hidden" name="oid" value="00DU7000006EuID" />
       <input
         type="hidden"
@@ -58,1213 +790,377 @@
       <input
         type="hidden"
         name="first_name"
-        value="Safeco-Auto-2.10.3 Check Trial"
+        value="Safeco-New-7.0 Check Trial"
       />
       <input type="hidden" name="last_name" value="Test" />
       <input type="hidden" name="status" value="New" />
-      <input type="hidden" name="phone" value="18736836129" />
+      <input type="hidden" name="phone" value="28436836129" />
       <input type="hidden" name="lead_source" value="Web Form" />
-      <input
-        type="hidden"
-        name="company"
-        value="Caelius Test Safeco New 2.10.3"
-      />
+      <input type="hidden" name="company" value="Caelius Test Safeco New 7.0" />
       <input
         type="hidden"
         name="Debug_Notes__c"
         value="Safeco Test: 2025-06-27 07:21AM"
       />
 
-      <!-- 1. Quote or Policy Change Request -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Is this a quote or a policy change request?
-        </label>
-        <div class="flex space-x-4">
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              name="00NU7000006IOzh"
-              value="Y"
-              required
-              class="mr-2"
-            />Yes
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              name="00NU7000006IOzh"
-              value="N"
-              required
-              class="mr-2"
-            />No
-          </label>
-        </div>
-        <div id="quotePolicyError" class="error-message hidden">
-          Please select an option
-        </div>
-      </div>
-
-      <!-- 2. Policy Action -->
-      <div>
-        <label
-          for="policyAction"
-          class="block text-sm font-medium text-gray-700"
-          >Policy Action</label
+      <div class="flex justify-end mt-6">
+        <button
+          type="button"
+          id="reviewBtn"
+          class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl hover:bg-blue-700 transition"
         >
-        <select
-          id="00NU7000005zuNN"
-          name="00NU7000005zuNN"
-          required
-          class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-        >
-          <option value="">--None--</option>
-          <option value="Replace Vehicle">Replace Vehicle</option>
-          <option value="Add Vehicle">Add Vehicle</option>
-          <option value="Remove Vehicle">Remove Vehicle</option>
-          <option value="Add Driver">Add Driver</option>
-          <option value="Remove Driver">Remove Driver</option>
-        </select>
-        <div id="policyActionError" class="error-message hidden">
-          Please select a policy action
-        </div>
+          Review and Submit
+        </button>
       </div>
+    </form>
 
-      <!-- 3. Policy Number -->
-      <div id="policyNumberSection" class="hidden">
-        <label
-          for="policyNumber"
-          class="block text-sm font-medium text-gray-700"
-        >
-          Policy Number
-        </label>
-        <input
-          type="text"
-          id="00NU7000005zuX3"
-          name="00NU7000005zuX3"
-          class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-        />
-        <div id="policyNumberError" class="error-message hidden">
-          Policy number is required
-        </div>
-      </div>
-
-      <!-- 4. Line of Business -->
-      <div id="lobSection" class="hidden">
-        <label for="lob" class="block text-sm font-medium text-gray-700"
-          >Line of Business</label
-        >
-        <select
-          id="00NU7000006Hi7d"
-          name="00NU7000006Hi7d"
-          class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-        >
-          <option value="">--None--</option>
-          <option
-            value="Auto (includes motorhome, trailer &amp;amp; antique or classic)"
-          >
-            Auto (includes motorhome, trailer &amp;amp; antique or classic)
-          </option>
-          <option value="Home">Home</option>
-          <option value="Fire">Fire</option>
-          <option value="Motorcycle">Motorcycle</option>
-          <option value="Off-Road Rec Vehicle">Off-Road Rec Vehicle</option>
-          <option value="Umbrella">Umbrella</option>
-          <option value="Watercraft">Watercraft</option>
-        </select>
-        <div id="lobError" class="error-message hidden">
-          Line of business is required
-        </div>
-      </div>
-
-      <!-- 5. Effective Date -->
-      <div id="effectiveDateSection" class="hidden">
-        <label
-          for="00NU7000005zuLl"
-          class="block text-sm font-medium text-gray-700"
-        >
-          Effective Date
-        </label>
-        <input
-          type="date"
-          id="00NU7000005zuLl"
-          name="00NU7000005zuLl"
-          class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
-        <div id="effectiveDateError" class="error-message hidden">
-          Effective date is required
-        </div>
-      </div>
-
-      <!-- VIN Section Start -->
-      <div id="vinSection" class="hidden flex flex-col space-y-6">
-        <!-- VIN 1: Do you know the VIN of the Old Vehicle? -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Do you know the VIN of the Old Vehicle?
-          </label>
-          <div class="flex space-x-4">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                id="vin1Yes"
-                name="vin1Know"
-                value="Y"
-                class="mr-2"
-              />Yes
-            </label>
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                id="vin1No"
-                name="vin1Know"
-                value="N"
-                class="mr-2"
-              />No
-            </label>
-          </div>
-          <div id="vin1SelectError" class="error-message hidden">
-            Please select an option
-          </div>
-        </div>
-        <!-- VIN 1: Input -->
-        <div id="vin1InputSection" class="hidden">
-          <label
-            for="00NU700000616Sv"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            VIN number of Old Vehicle
-          </label>
-          <input
-            id="00NU700000616Sv"
-            name="00NU700000616Sv"
-            maxlength="255"
-            type="text"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-          />
-          <div id="vin1InputError" class="error-message hidden">
-            VIN number is required
-          </div>
-        </div>
-        <!-- VIN 2: Do you know the VIN of the New Vehicle? -->
-        <div id="vin2Section" class="hidden">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Do you know the VIN of the New Vehicle?
-          </label>
-          <div class="flex space-x-4">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                id="vin2Yes"
-                name="vin2Know"
-                value="Y"
-                class="mr-2"
-              />Yes
-            </label>
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                id="vin2No"
-                name="vin2Know"
-                value="N"
-                class="mr-2"
-              />No
-            </label>
-          </div>
-          <div id="vin2SelectError" class="error-message hidden">
-            Please select an option
-          </div>
-        </div>
-        <!-- VIN 2: Input -->
-        <div id="vin2InputSection" class="hidden">
-          <label
-            for="00NU7000006Knh3"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            VIN number of New Vehicle
-          </label>
-          <input
-            id="00NU7000006Knh3"
-            name="00NU7000006Knh3"
-            maxlength="255"
-            type="text"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-          />
-          <div id="vin2InputError" class="error-message hidden">
-            VIN number 2 is required
-          </div>
-        </div>
-
-        <!-- NEW VEHICLE DETAILS -->
-        <div id="vehUseSection" class="hidden">
-          <label
-            for="00NU7000006N0iD"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Is the vehicle used to commute to work/ school?
-          </label>
-          <select
-            id="00NU7000006N0iD"
-            name="00NU7000006N0iD"
-            title="Vehicle Use"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-          >
-            <option value="">--None--</option>
-            <option
-              value="Pleasure or Work/School &lt; 4 miles"
-              data-match="Pleasure or Work/School < 4 miles"
-            >
-              Pleasure or Work/School &lt; 4 miles
-            </option>
-            <option value="Work/School 4 or more miles">
-              Work/School 4 or more miles
-            </option>
-            <option value="Business Use">Business Use</option>
-            <option value="Show Use">Show Use</option>
-            <option value="Farm Use">Farm Use</option>
-          </select>
-          <div id="vehUseError" class="error-message hidden">
-            Please select a vehicle use.
-          </div>
-        </div>
-        <div id="ownershipSection" class="hidden">
-          <label
-            for="00NU7000006N0wj"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Ownership
-          </label>
-          <select
-            id="00NU7000006N0wj"
-            name="00NU7000006N0wj"
-            title="Ownership"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-          >
-            <option value="">--None--</option>
-            <option value="Owned">Owned</option>
-            <option value="Financed">Financed</option>
-            <option value="Leased">Leased</option>
-          </select>
-          <div id="ownershipError" class="error-message hidden">
-            Please select ownership.
-          </div>
-        </div>
-        <div id="annualMilesSection" class="hidden">
-          <label
-            for="00NU7000006N0zx"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Annual Miles
-          </label>
-          <input
-            id="00NU7000006N0zx"
-            maxlength="255"
-            name="00NU7000006N0zx"
-            size="20"
-            type="text"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-          />
-          <div id="annualMilesError" class="error-message hidden">
-            Please enter annual miles.
-          </div>
-        </div>
-        <div id="purchasedNewSection" class="hidden">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Vehicle purchased new?
-          </label>
-          <div class="flex space-x-4">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                id="vehNewYes"
-                name="00NU7000006N1MX"
-                value="Y"
-                class="mr-2"
-              />Yes
-            </label>
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                id="vehNewNo"
-                name="00NU7000006N1MX"
-                value="N"
-                class="mr-2"
-              />No
-            </label>
-          </div>
-          <div id="vehNewError" class="error-message hidden">
-            Please select Yes or No.
-          </div>
-        </div>
-        <div id="yearsOwnedSection" class="hidden">
-          <label
-            for="00NU7000006N1Pl"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Years Vehicle Owned
-          </label>
-          <input
-            id="00NU7000006N1Pl"
-            maxlength="255"
-            name="00NU7000006N1Pl"
-            size="20"
-            type="text"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-          />
-          <div id="yearsOwnedError" class="error-message hidden">
-            Please enter the years vehicle has been owned.
-          </div>
-        </div>
-
-        <!-- === DEDUCTIBLE & COVERAGE SECTION === -->
-        <div id="deductiblesSection" class="hidden space-y-4">
-          <!-- Comprehensive Deductible -->
-          <div>
-            <label
-              for="00NU7000006NdwT"
-              class="block text-sm font-medium text-gray-700"
-              >Comprehensive Deductible</label
-            >
-            <select
-              id="00NU7000006NdwT"
-              name="00NU7000006NdwT"
-              title="Comprehensive Deductible"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="100">100</option>
-              <option value="100 w/Glass">100 w/Glass</option>
-              <option value="250">250</option>
-              <option value="250 w/Glass">250 w/Glass</option>
-              <option value="500">500</option>
-              <option value="500 w/Glass">500 w/Glass</option>
-              <option value="750">750</option>
-              <option value="750 w/Glass">750 w/Glass</option>
-              <option value="1000">1000</option>
-            </select>
-            <div id="compDeductibleError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- Collision Deductible -->
-          <div>
-            <label
-              for="00NU7000006Ne7l"
-              class="block text-sm font-medium text-gray-700"
-              >Collision Deductible</label
-            >
-            <select
-              id="00NU7000006Ne7l"
-              name="00NU7000006Ne7l"
-              title="Collision Deductible"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="100">100</option>
-              <option value="250">250</option>
-              <option value="500">500</option>
-              <option value="750">750</option>
-              <option value="1000">1000</option>
-              <option value="1500">1500</option>
-              <option value="2000">2000</option>
-            </select>
-            <div id="collDeductibleError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- Roadside Assistance -->
-          <div>
-            <label
-              for="00NU7000006NeZB"
-              class="block text-sm font-medium text-gray-700"
-              >Roadside Assistance</label
-            >
-            <select
-              id="00NU7000006NeZB"
-              name="00NU7000006NeZB"
-              title="Roadside Assistance"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="EAP">EAP</option>
-              <option value="Roadside Assistance">Roadside Assistance</option>
-            </select>
-            <div id="roadsideError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- Loss of Use -->
-          <div>
-            <label
-              for="00NU7000006Nenh"
-              class="block text-sm font-medium text-gray-700"
-              >Loss of Use</label
-            >
-            <select
-              id="00NU7000006Nenh"
-              name="00NU7000006Nenh"
-              title="Loss of Use"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="25/per day">25/per day</option>
-              <option value="35/per day">35/per day</option>
-              <option value="50/per day">50/per day</option>
-              <option value="75/per day">75/per day</option>
-            </select>
-            <div id="lossOfUseError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- Auto Loan/Lease Coverage -->
-          <div>
-            <label
-              for="00NU7000006Nf8f"
-              class="block text-sm font-medium text-gray-700"
-              >Auto Loan/Lease Coverage</label
-            >
-            <select
-              id="00NU7000006Nf8f"
-              name="00NU7000006Nf8f"
-              title="Auto Loan/Lease Coverage"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="Yes">Yes</option>
-            </select>
-            <div id="loanLeaseError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- A/V & Customized Equipment -->
-          <div>
-            <label
-              for="00NU7000006Ngj4"
-              class="block text-sm font-medium text-gray-700"
-              >A/V &amp; Customized Equipment</label
-            >
-            <select
-              id="00NU7000006Ngj4"
-              name="00NU7000006Ngj4"
-              title="A/V &amp; Customized Equipment"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="500">500</option>
-              <option value="1000">1000</option>
-              <option value="1500">1500</option>
-              <option value="2000">2000</option>
-              <option value="2500">2500</option>
-              <option value="3000">3000</option>
-              <option value="3500">3500</option>
-              <option value="4000">4000</option>
-              <option value="4500">4500</option>
-              <option value="5000">5000</option>
-            </select>
-            <div id="avEqError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- Original Parts Replacement / OEM -->
-          <div>
-            <label
-              for="00NU7000006NiHp"
-              class="block text-sm font-medium text-gray-700"
-              >Original Parts Replacement / OEM</label
-            >
-            <select
-              id="00NU7000006NiHp"
-              name="00NU7000006NiHp"
-              title="Original Parts Replacement / OEM"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="Yes">Yes</option>
-            </select>
-            <div id="oemError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-          <!-- Lmtd Rideshare & Delivery Network -->
-          <div>
-            <label
-              for="00NU7000006NiOH"
-              class="block text-sm font-medium text-gray-700"
-              >Lmtd Rideshare &amp; Delivery Network</label
-            >
-            <select
-              id="00NU7000006NiOH"
-              name="00NU7000006NiOH"
-              title="Lmtd Rideshare &amp; Delivery Network"
-              class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <option value="">--None--</option>
-              <option value="Yes">Yes</option>
-            </select>
-            <div id="rideshareError" class="error-message hidden">
-              Please select a value
-            </div>
-          </div>
-        </div>
-        <!-- === END DEDUCTIBLE & COVERAGE SECTION === -->
-      </div>
-      <!-- VIN Section End -->
-
-      <!-- Modal for Sorry message -->
+    <!-- Confirmation Dialog -->
+    <div
+      id="dialog"
+      class="hidden fixed inset-0 flex items-center justify-center modal-bg z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dialogTitle"
+    >
       <div
-        id="sorryModal"
-        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="bg-white rounded-lg p-6 max-w-md w-full shadow-lg text-gray-800"
       >
-        <div class="bg-white rounded-xl p-8 shadow-lg text-center max-w-xs">
-          <div class="text-lg font-semibold mb-4 text-gray-800">
-            Sorry for your inconvenience<br />We will reach out to you shortly.
-          </div>
+        <h3 id="dialogTitle" class="text-lg font-semibold mb-4"></h3>
+        <ul id="missingFieldsList" class="mb-4 text-red-600 text-sm"></ul>
+        <div class="flex justify-end space-x-3" id="dialogButtons">
           <button
-            id="sorryModalClose"
-            type="button"
-            class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            id="proceedBtn"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-medium"
           >
-            OK
+            Proceed to End Request
+          </button>
+          <button
+            id="editBtn"
+            class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 font-medium"
+          >
+            Edit
           </button>
         </div>
       </div>
+    </div>
 
-      <button
-        id="submitButton"
-        type="submit"
-        class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl hover:bg-blue-700 transition hidden"
-      >
-        Submit
-      </button>
-    </form>
-
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // ---- field refs ----
+        // Pikaday for Effective Date
+        new Pikaday({
+          field: document.getElementById("00NU7000005zuLl"),
+          format: "MM/DD/YYYY",
+          toString(date) {
+            const day = String(date.getDate()).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const year = date.getFullYear();
+            return `${month}/${day}/${year}`;
+          },
+          parse(dateString) {
+            const [month, day, year] = dateString.split("/");
+            return new Date(year, month - 1, day);
+          },
+        });
+
+        // Fields requiring validation for main sections
+        const requiredFields = [
+          // Policy Changes
+          { id: "email", label: "Email", type: "email" },
+          {
+            radioGroupName: "00NU7000006IOzh",
+            label: "Is this a quote or a change request?",
+          },
+          { id: "00NU7000005zuNN", label: "Policy Action" },
+          { id: "00NU7000005zuX3", label: "Policy Number" },
+          {
+            id: "00NU7000005zuLl",
+            label: "Effective Date (MM/DD/YYYY)",
+            type: "date",
+          },
+
+          // Vehicle Details (radio groups for VIN questions)
+          {
+            radioGroupName: "00NU7000006DHIv",
+            label: "Do you know the VIN of the Old Vehicle?",
+          },
+          { id: "00NU700000616Sv", label: "VIN Number of Old Vehicle" },
+          {
+            radioGroupName: "00NU7000006NiT7",
+            label: "Do you know the VIN of the New Vehicle?",
+          },
+          { id: "00NU7000006Knh3", label: "VIN Number of New Vehicle" },
+          {
+            id: "00NU7000006N0iD",
+            label: "Is the vehicle used to commute to work/ school?",
+          },
+          { id: "00NU7000006N0wj", label: "Ownership" },
+          { id: "00NU7000006N0zx", label: "Annual Miles" },
+          {
+            radioGroupName: "00NU7000006N1MX",
+            label: "Vehicle purchased new?",
+          },
+        ];
+
+        // Additional Interest fields (all mandatory except Address Line 2)
+        const additionalInterestFields = [
+          { id: "00NU7000006OUCn", label: "Interest Type" },
+          { id: "00NU7000006YQuN", label: "Interest Name" },
+          { id: "00NU7000006YRFF", label: "Interest Address" },
+          { id: "city", label: "Interest City" },
+          { id: "00NU7000005zvWL", label: "Interest State" },
+          { id: "00NU7000005zw7R", label: "Interest Zip Code" },
+        ];
+
         const form = document.getElementById("mainForm");
-        const policyAction = document.getElementById("00NU7000005zuNN");
-        const policyNumberSection = document.getElementById(
-          "policyNumberSection"
+        const reviewBtn = document.getElementById("reviewBtn");
+        const dialog = document.getElementById("dialog");
+        const dialogTitle = document.getElementById("dialogTitle");
+        const missingFieldsList = document.getElementById("missingFieldsList");
+        const proceedBtn = document.getElementById("proceedBtn");
+        const editBtn = document.getElementById("editBtn");
+        const additionalInterestSection = document.getElementById(
+          "additionalInterestSection"
         );
-        const lobSection = document.getElementById("lobSection");
-        const effectiveDateSection = document.getElementById(
-          "effectiveDateSection"
-        );
-        const policyNumberInput = document.getElementById("00NU7000005zuX3");
-        const lobInput = document.getElementById("00NU7000006Hi7d");
-        const effectiveDateInput = document.getElementById("00NU7000005zuLl");
-        const quotePolicyRadios = document.querySelectorAll(
-          'input[name="00NU7000006IOzh"]'
-        );
-
-        // Error elements
-        const quotePolicyError = document.getElementById("quotePolicyError");
-        const policyActionError = document.getElementById("policyActionError");
-        const policyNumberError = document.getElementById("policyNumberError");
-        const lobError = document.getElementById("lobError");
-        const effectiveDateError =
-          document.getElementById("effectiveDateError");
-
-        // VIN fields
-        const vinSection = document.getElementById("vinSection");
-        const vin1Radios = document.querySelectorAll('input[name="vin1Know"]');
-        const vin1InputSection = document.getElementById("vin1InputSection");
-        const vin1Input = document.getElementById("00NU700000616Sv");
-        const vin2Section = document.getElementById("vin2Section");
-        const vin2Radios = document.querySelectorAll('input[name="vin2Know"]');
-        const vin2InputSection = document.getElementById("vin2InputSection");
-        const vin2Input = document.getElementById("00NU7000006Knh3");
-        const sorryModal = document.getElementById("sorryModal");
-        const sorryModalClose = document.getElementById("sorryModalClose");
-
-        // Vehicle info after VIN2
-        const vehUseSection = document.getElementById("vehUseSection");
-        const ownershipSection = document.getElementById("ownershipSection");
-        const annualMilesSection =
-          document.getElementById("annualMilesSection");
-        const purchasedNewSection = document.getElementById(
-          "purchasedNewSection"
-        );
-        const yearsOwnedSection = document.getElementById("yearsOwnedSection");
-        const submitButton = document.getElementById("submitButton");
-
-        // Vehicle fields
-        const vehUseInput = document.getElementById("00NU7000006N0iD");
-        const ownershipInput = document.getElementById("00NU7000006N0wj");
-        const annMilesInput = document.getElementById("00NU7000006N0zx");
-        const vehNewRadios = document.querySelectorAll(
-          'input[name="00NU7000006N1MX"]'
-        );
+        const ownershipSelect = document.getElementById("00NU7000006N0wj");
         const yearsOwnedInput = document.getElementById("00NU7000006N1Pl");
 
-        // Error elements for new fields
-        const vin1SelectError = document.getElementById("vin1SelectError");
-        const vin1InputError = document.getElementById("vin1InputError");
-        const vin2SelectError = document.getElementById("vin2SelectError");
-        const vin2InputError = document.getElementById("vin2InputError");
-        const vehUseError = document.getElementById("vehUseError");
-        const ownershipError = document.getElementById("ownershipError");
-        const annualMilesError = document.getElementById("annualMilesError");
-        const vehNewError = document.getElementById("vehNewError");
-        const yearsOwnedError = document.getElementById("yearsOwnedError");
+        // Coverage related selects
+        const comprehensiveDeductible =
+          document.getElementById("00NU7000006NdwT");
+        const collisionDeductible = document.getElementById("00NU7000006Ne7l");
+        const roadsideAssistance = document.getElementById("00NU7000006NeZB");
+        const lossOfUse = document.getElementById("00NU7000006Nenh");
 
-        // Deductible fields
-        const deductiblesSection =
-          document.getElementById("deductiblesSection");
-        const compDeductibleInput = document.getElementById("00NU7000006NdwT");
-        const collDeductibleInput = document.getElementById("00NU7000006Ne7l");
-        const roadsideInput = document.getElementById("00NU7000006NeZB");
-        const lossOfUseInput = document.getElementById("00NU7000006Nenh");
-        const loanLeaseInput = document.getElementById("00NU7000006Nf8f");
-        const avEqInput = document.getElementById("00NU7000006Ngj4");
-        const oemInput = document.getElementById("00NU7000006NiHp");
-        const rideshareInput = document.getElementById("00NU7000006NiOH");
-        // Deductible error elements
-        const compDeductibleError = document.getElementById(
-          "compDeductibleError"
+        // Tooltips for collision deductible and roadside assistance
+        const collisionWrapper = document.getElementById(
+          "collisionDeductibleWrapper"
         );
-        const collDeductibleError = document.getElementById(
-          "collDeductibleError"
+        const roadsideWrapper = document.getElementById(
+          "roadsideAssistanceWrapper"
         );
-        const roadsideError = document.getElementById("roadsideError");
-        const lossOfUseError = document.getElementById("lossOfUseError");
-        const loanLeaseError = document.getElementById("loanLeaseError");
-        const avEqError = document.getElementById("avEqError");
-        const oemError = document.getElementById("oemError");
-        const rideshareError = document.getElementById("rideshareError");
+        const lossOfUseWrapper = document.getElementById("lossOfUseWrapper");
 
-        function clearDeductibles() {
-          [
-            compDeductibleInput,
-            collDeductibleInput,
-            roadsideInput,
-            lossOfUseInput,
-            loanLeaseInput,
-            avEqInput,
-            oemInput,
-            rideshareInput,
-          ].forEach((i) => (i.value = ""));
-          [
-            compDeductibleError,
-            collDeductibleError,
-            roadsideError,
-            lossOfUseError,
-            loanLeaseError,
-            avEqError,
-            oemError,
-            rideshareError,
-          ].forEach((e) => e.classList.add("hidden"));
+        // Show/hide Additional Interest based on Ownership field selection
+        function toggleAdditionalInterestSection() {
+          const val = ownershipSelect.value;
+          if (val === "Owned" || val === "") {
+            additionalInterestSection.classList.add("hidden");
+            reviewBtn.disabled = false;
+          } else if (val === "Financed" || val === "Leased") {
+            additionalInterestSection.classList.remove("hidden");
+            reviewBtn.disabled = false;
+          }
         }
-
-        // ------------ Show Deductibles Section when Years Owned Done ------------ //
-        yearsOwnedInput.addEventListener("blur", function () {
-          yearsOwnedError.classList.add("hidden");
-          if (yearsOwnedInput.value.trim()) {
-            deductiblesSection.classList.remove("hidden");
-            submitButton.classList.add("hidden");
-          }
-        });
-        yearsOwnedInput.addEventListener("input", function () {
-          if (yearsOwnedInput.value.trim()) {
-            deductiblesSection.classList.remove("hidden");
-            submitButton.classList.add("hidden");
-          }
-        });
-
-        // When radio No (not purchased new), set yearsOwned to 0 and instantly show deductibles
-        vehNewRadios.forEach((radio) =>
-          radio.addEventListener("change", function () {
-            vehNewError.classList.add("hidden");
-            yearsOwnedSection.classList.add("hidden");
-            yearsOwnedInput.value = "";
-            if (radio.value === "Y" && radio.checked) {
-              yearsOwnedSection.classList.remove("hidden");
-              deductiblesSection.classList.add("hidden");
-              submitButton.classList.add("hidden");
-            } else if (radio.value === "N" && radio.checked) {
-              yearsOwnedInput.value = "0";
-              yearsOwnedSection.classList.add("hidden");
-              deductiblesSection.classList.remove("hidden");
-              submitButton.classList.add("hidden");
-            }
-          })
+        ownershipSelect.addEventListener(
+          "change",
+          toggleAdditionalInterestSection
         );
+        toggleAdditionalInterestSection();
 
-        [
-          compDeductibleInput,
-          collDeductibleInput,
-          roadsideInput,
-          lossOfUseInput,
-          loanLeaseInput,
-          avEqInput,
-          oemInput,
-          rideshareInput,
-        ].forEach((input) => {
-          input.addEventListener("change", function () {
-            compDeductibleError.classList.add("hidden");
-            collDeductibleError.classList.add("hidden");
-            roadsideError.classList.add("hidden");
-            lossOfUseError.classList.add("hidden");
-            loanLeaseError.classList.add("hidden");
-            avEqError.classList.add("hidden");
-            oemError.classList.add("hidden");
-            rideshareError.classList.add("hidden");
-            // Only show submit if all are selected
-            showOrHideDeductibleSubmit();
-          });
-        });
-
-        function showOrHideDeductibleSubmit() {
-          if (deductiblesSection.classList.contains("hidden")) return;
-          const allFilled =
-            compDeductibleInput.value &&
-            collDeductibleInput.value &&
-            roadsideInput.value &&
-            lossOfUseInput.value &&
-            loanLeaseInput.value &&
-            avEqInput.value &&
-            oemInput.value &&
-            rideshareInput.value;
-          if (allFilled) {
-            submitButton.classList.remove("hidden");
+        // Vehicle purchased new? logic for years owned field (per new spec)
+        const vehPurchasedRadios = document.querySelectorAll(
+          'input[name="00NU7000006N1MX"]'
+        );
+        function updateYearsOwnedField() {
+          let purchasedNewVal = null;
+          for (const r of vehPurchasedRadios) {
+            if (r.checked) {
+              purchasedNewVal = r.value;
+              break;
+            }
+          }
+          if (purchasedNewVal === "Y") {
+            yearsOwnedInput.value = "";
+            yearsOwnedInput.readOnly = false;
           } else {
-            submitButton.classList.add("hidden");
+            yearsOwnedInput.readOnly = false;
           }
         }
+        vehPurchasedRadios.forEach((radio) => {
+          radio.addEventListener("change", updateYearsOwnedField);
+        });
+        updateYearsOwnedField();
 
-        function updateFormSections() {
-          const isReplace = policyAction.value === "Replace Vehicle";
-          policyNumberSection.classList.toggle("hidden", !isReplace);
-          lobSection.classList.toggle("hidden", !isReplace);
-          effectiveDateSection.classList.add("hidden");
-          vinSection.classList.toggle("hidden", !isReplace);
-
-          if (!isReplace) {
-            policyNumberInput.value = "";
-            lobInput.value = "";
-            effectiveDateInput.value = "";
-            vin1Radios.forEach((r) => (r.checked = false));
-            vin1Input.value = "";
-            vin2Radios.forEach((r) => (r.checked = false));
-            vin2Input.value = "";
-            vin1InputSection.classList.add("hidden");
-            vin2Section.classList.add("hidden");
-            vin2InputSection.classList.add("hidden");
-            vehUseSection.classList.add("hidden");
-            ownershipSection.classList.add("hidden");
-            annualMilesSection.classList.add("hidden");
-            purchasedNewSection.classList.add("hidden");
-            yearsOwnedSection.classList.add("hidden");
-            deductiblesSection.classList.add("hidden");
-            submitButton.classList.add("hidden");
-            vehUseInput.value = "";
-            ownershipInput.value = "";
-            annMilesInput.value = "";
-            vehNewRadios.forEach((r) => (r.checked = false));
-            yearsOwnedInput.value = "";
-            clearDeductibles();
-          }
-        }
-
-        vin1Radios.forEach((radio) =>
-          radio.addEventListener("change", function () {
-            vin1SelectError.classList.add("hidden");
-            vin1InputError.classList.add("hidden");
-            vin1Input.classList.remove("error");
-            if (radio.value === "Y" && radio.checked) {
-              vin1InputSection.classList.remove("hidden");
-              vin2Section.classList.add("hidden");
-              vin2InputSection.classList.add("hidden");
-              vin2Radios.forEach((r) => (r.checked = false));
-              vin2Input.value = "";
-              vehUseSection.classList.add("hidden");
-              ownershipSection.classList.add("hidden");
-              annualMilesSection.classList.add("hidden");
-              purchasedNewSection.classList.add("hidden");
-              yearsOwnedSection.classList.add("hidden");
-              deductiblesSection.classList.add("hidden");
-              submitButton.classList.add("hidden");
-              vehUseInput.value = "";
-              ownershipInput.value = "";
-              annMilesInput.value = "";
-              vehNewRadios.forEach((r) => (r.checked = false));
-              yearsOwnedInput.value = "";
-              clearDeductibles();
-            } else if (radio.value === "N" && radio.checked) {
-              showSorryAndSubmit();
-            } else {
-              vin1InputSection.classList.add("hidden");
-              vin2Section.classList.add("hidden");
-              vin2InputSection.classList.add("hidden");
-              vehUseSection.classList.add("hidden");
-              ownershipSection.classList.add("hidden");
-              annualMilesSection.classList.add("hidden");
-              purchasedNewSection.classList.add("hidden");
-              yearsOwnedSection.classList.add("hidden");
-              deductiblesSection.classList.add("hidden");
-              submitButton.classList.add("hidden");
-              clearDeductibles();
-            }
-          })
-        );
-        vin1Input.addEventListener("blur", checkVin1Input);
-        vin1Input.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            checkVin1Input();
+        // Track if Additional Interest fields edited for enabling submit
+        let additionalInterestEdited = false;
+        additionalInterestFields.forEach((field) => {
+          const el = document.getElementById(field.id);
+          if (el) {
+            el.addEventListener("input", () => {
+              additionalInterestEdited = true;
+            });
           }
         });
-        function checkVin1Input() {
-          vin1InputError.classList.add("hidden");
-          vin1Input.classList.remove("error");
-          if ([...vin1Radios].find((r) => r.value === "Y" && r.checked)) {
-            if (!vin1Input.value.trim()) {
-              showSorryAndSubmit();
-            } else {
-              vin2Section.classList.remove("hidden");
-            }
-          }
-        }
-        vin2Radios.forEach((radio) =>
-          radio.addEventListener("change", function () {
-            vin2SelectError.classList.add("hidden");
-            vin2InputError.classList.add("hidden");
-            vin2Input.classList.remove("error");
-            if (radio.value === "Y" && radio.checked) {
-              vin2InputSection.classList.remove("hidden");
-            } else if (radio.value === "N" && radio.checked) {
-              showSorryAndSubmit();
-            } else {
-              vin2InputSection.classList.add("hidden");
-              vehUseSection.classList.add("hidden");
-              ownershipSection.classList.add("hidden");
-              annualMilesSection.classList.add("hidden");
-              purchasedNewSection.classList.add("hidden");
-              yearsOwnedSection.classList.add("hidden");
-              deductiblesSection.classList.add("hidden");
-              submitButton.classList.add("hidden");
-              clearDeductibles();
-            }
-          })
-        );
-        vin2Input.addEventListener("blur", checkVin2Input);
-        vin2Input.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            checkVin2Input();
-          }
+        ownershipSelect.addEventListener("change", () => {
+          additionalInterestEdited = false;
         });
-        function checkVin2Input() {
-          vin2InputError.classList.add("hidden");
-          vin2Input.classList.remove("error");
-          if ([...vin2Radios].find((r) => r.value === "Y" && r.checked)) {
-            if (!vin2Input.value.trim()) {
-              showSorryAndSubmit();
+        comprehensiveDeductible.addEventListener("change", () => {
+          additionalInterestEdited = true;
+        });
+        collisionDeductible.addEventListener("change", () => {
+          additionalInterestEdited = true;
+        });
+        roadsideAssistance.addEventListener("change", () => {
+          additionalInterestEdited = true;
+        });
+        lossOfUse.addEventListener("change", () => {
+          additionalInterestEdited = true;
+        });
+        document
+          .getElementById("00NU7000006OUCn")
+          .addEventListener("change", () => {
+            additionalInterestEdited = true;
+          });
+
+        // Validate all required fields and also custom coverage rules
+        function validateFields() {
+          const missing = [];
+
+          // Validate main required fields
+          requiredFields.forEach((field) => {
+            if (field.radioGroupName) {
+              const radios = document.querySelectorAll(
+                `input[name="${field.radioGroupName}"]`
+              );
+              const checked = [...radios].some((r) => r.checked);
+              if (!checked) missing.push(field.label);
+            } else if (field.type === "email") {
+              const el = document.getElementById(field.id);
+              if (!el.value.trim() || !el.checkValidity())
+                missing.push(field.label);
+            } else if (field.type === "date") {
+              const val = document.getElementById(field.id).value.trim();
+              const dateRegex =
+                /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/20[2-9]\d$/;
+              if (!val || !dateRegex.test(val)) missing.push(field.label);
             } else {
-              vehUseSection.classList.remove("hidden");
-              ownershipSection.classList.add("hidden");
-              annualMilesSection.classList.add("hidden");
-              purchasedNewSection.classList.add("hidden");
-              yearsOwnedSection.classList.add("hidden");
-              deductiblesSection.classList.add("hidden");
-              submitButton.classList.add("hidden");
-              clearDeductibles();
+              const el = document.getElementById(field.id);
+              if (!el || !el.value.trim()) missing.push(field.label);
+            }
+          });
+
+          // Years Vehicle Owned special validation
+          let purchasedNewVal = null;
+          for (const r of vehPurchasedRadios) {
+            if (r.checked) {
+              purchasedNewVal = r.value;
+              break;
             }
           }
-        }
-        // VEHICLE USE LOGIC
-        vehUseInput.addEventListener("change", function () {
-          vehUseError.classList.add("hidden");
-          ownershipSection.classList.add("hidden");
-          annualMilesSection.classList.add("hidden");
-          purchasedNewSection.classList.add("hidden");
-          yearsOwnedSection.classList.add("hidden");
-          deductiblesSection.classList.add("hidden");
-          submitButton.classList.add("hidden");
-          ownershipInput.value = "";
-          annMilesInput.value = "";
-          vehNewRadios.forEach((r) => (r.checked = false));
-          yearsOwnedInput.value = "";
-          clearDeductibles();
+          if (purchasedNewVal === "N" || purchasedNewVal === null) {
+            if (!yearsOwnedInput.value.trim())
+              missing.push("Years Vehicle Owned");
+          }
 
-          var val = vehUseInput.value;
-          // The only ones that show modal are exactly these three:
-          if (
-            val === "Business Use" ||
-            val === "Show Use" ||
-            val === "Farm Use"
-          ) {
-            showSorryAndSubmit();
+          // Additional Interest validation only if visible
+          if (!additionalInterestSection.classList.contains("hidden")) {
+            additionalInterestFields.forEach((field) => {
+              if (field.id === "00NU7000006YTXB") return; // Address Line 2 not mandatory
+              const el = document.getElementById(field.id);
+              if (!el || !el.value.trim()) missing.push(field.label);
+            });
+          }
+
+          // Custom logic for Interest Type = Loss Payee
+          const interestTypeSelect = document.getElementById("00NU7000006OUCn");
+          const interestTypeVal = interestTypeSelect
+            ? interestTypeSelect.value
+            : "";
+          const compDeduct = comprehensiveDeductible.value;
+          const collDeduct = collisionDeductible.value;
+          const roadAssistVal = roadsideAssistance.value;
+          const lossUseVal = lossOfUse.value;
+          let customErrors = [];
+
+          if (interestTypeVal === "Loss Payee") {
+            if (
+              (!compDeduct || compDeduct === "") &&
+              (!collDeduct || collDeduct === "")
+            ) {
+              customErrors.push(
+                "Vehicle with Loss Payee Additional Interest must have Comprehensive Deductible or Collision Deductible Coverage or change the Interest Type."
+              );
+            }
+          }
+
+          if (roadAssistVal === "EAP") {
+            const lossUseNumber = parseInt(lossUseVal) || 0;
+            if (
+              !compDeduct ||
+              compDeduct === "" ||
+              !collDeduct ||
+              collDeduct === "" ||
+              lossUseNumber < 35
+            ) {
+              customErrors.push(
+                "When Roadside Assistance is EAP, Comprehensive Deductible and Collision Deductible cannot be None and Loss of Use must be 35/per day or above."
+              );
+            }
+          }
+
+          return { missing, customErrors };
+        }
+
+        // Prevent native submit
+        form.addEventListener("submit", (e) => e.preventDefault());
+
+        reviewBtn.addEventListener("click", () => {
+          const { missing, customErrors } = validateFields();
+
+          // Block submit if missing required fields
+          // Block submit also if custom rules blocked (Loss Payee or EAP cases)
+          if (missing.length || customErrors.length) {
+            let errorsHTML = "";
+            if (missing.length) {
+              errorsHTML +=
+                "<strong>Below Mandatory Fields are missing and the Team will contact you shortly.</strong><ul>" +
+                missing.map((f) => `<li>${f}</li>`).join("") +
+                "</ul>";
+            }
+            if (customErrors.length) {
+              errorsHTML +=
+                "<strong>Additional validation errors:</strong><ul>" +
+                customErrors.map((e) => `<li>${e}</li>`).join("") +
+                "</ul>";
+            }
+            dialogTitle.innerHTML = errorsHTML;
+            missingFieldsList.innerHTML = ""; // We put all errors in dialogTitle for clear top display
+            proceedBtn.disabled = true;
+            dialog.classList.remove("hidden");
             return;
           }
-          // The ones that progress stepwise are these two -- using the decoded value!
-          if (
-            val === "Pleasure or Work/School < 4 miles" ||
-            val === "Work/School 4 or more miles"
-          ) {
-            ownershipSection.classList.remove("hidden");
-          }
+
+          // No errors: enable submit
+          dialogTitle.textContent =
+            "All mandatory fields are completed. Ready to submit your request?";
+          missingFieldsList.innerHTML = "";
+          proceedBtn.disabled = false;
+          dialog.classList.remove("hidden");
         });
 
-        ownershipInput.addEventListener("change", function () {
-          ownershipError.classList.add("hidden");
-          annualMilesSection.classList.add("hidden");
-          purchasedNewSection.classList.add("hidden");
-          yearsOwnedSection.classList.add("hidden");
-          deductiblesSection.classList.add("hidden");
-          submitButton.classList.add("hidden");
-          annMilesInput.value = "";
-          vehNewRadios.forEach((r) => (r.checked = false));
-          yearsOwnedInput.value = "";
-          clearDeductibles();
-
-          if (ownershipInput.value) {
-            annualMilesSection.classList.remove("hidden");
-          }
+        editBtn.addEventListener("click", () => {
+          dialog.classList.add("hidden");
         });
 
-        annMilesInput.addEventListener("blur", function () {
-          annualMilesError.classList.add("hidden");
-          purchasedNewSection.classList.add("hidden");
-          yearsOwnedSection.classList.add("hidden");
-          deductiblesSection.classList.add("hidden");
-          submitButton.classList.add("hidden");
-          vehNewRadios.forEach((r) => (r.checked = false));
-          yearsOwnedInput.value = "";
-          clearDeductibles();
-          if (annMilesInput.value.trim()) {
-            purchasedNewSection.classList.remove("hidden");
-          }
-        });
-
-        vehNewRadios.forEach((radio) =>
-          radio.addEventListener("change", function () {
-            vehNewError.classList.add("hidden");
-            yearsOwnedSection.classList.add("hidden");
-            yearsOwnedInput.value = "";
-            deductiblesSection.classList.add("hidden");
-            submitButton.classList.add("hidden");
-            clearDeductibles();
-            if (radio.value === "Y" && radio.checked) {
-              yearsOwnedSection.classList.remove("hidden");
-              deductiblesSection.classList.add("hidden");
-              submitButton.classList.add("hidden");
-              clearDeductibles();
-            } else if (radio.value === "N" && radio.checked) {
-              yearsOwnedInput.value = "0";
-              yearsOwnedSection.classList.add("hidden");
-              deductiblesSection.classList.remove("hidden");
-              submitButton.classList.add("hidden");
-            }
-          })
-        );
-
-        yearsOwnedInput.addEventListener("blur", function () {
-          yearsOwnedError.classList.add("hidden");
-          if (yearsOwnedInput.value.trim()) {
-            deductiblesSection.classList.remove("hidden");
-            submitButton.classList.add("hidden");
-          }
-        });
-        yearsOwnedInput.addEventListener("input", function () {
-          if (yearsOwnedInput.value.trim()) {
-            deductiblesSection.classList.remove("hidden");
-            submitButton.classList.add("hidden");
-          }
-        });
-
-        function showSorryAndSubmit() {
-          sorryModal.classList.remove("hidden");
-          sorryModalClose.focus();
-        }
-        sorryModalClose.addEventListener("click", function () {
-          sorryModal.classList.add("hidden");
+        proceedBtn.addEventListener("click", () => {
+          dialog.classList.add("hidden");
           form.submit();
         });
-        document.addEventListener("keydown", function (e) {
-          if (!sorryModal.classList.contains("hidden") && e.key === "Escape") {
-            sorryModal.classList.add("hidden");
-            form.submit();
+
+        // Close dialog on click outside
+        window.addEventListener("click", (e) => {
+          if (e.target === dialog) {
+            dialog.classList.add("hidden");
           }
         });
 
-        policyAction.addEventListener("change", function () {
-          updateFormSections();
-          policyActionError.classList.add("hidden");
-        });
-        [policyNumberInput, lobInput].forEach((input) => {
-          input.addEventListener("input", function () {
-            if (
-              policyAction.value === "Replace Vehicle" &&
-              policyNumberInput.value.trim() &&
-              lobInput.value
-            ) {
-              effectiveDateSection.classList.remove("hidden");
-            } else {
-              effectiveDateSection.classList.add("hidden");
-              effectiveDateInput.value = "";
-            }
-          });
-        });
-
-        function validateForm() {
-          let isValid = true;
-          const quotePolicySelected = [...quotePolicyRadios].some(
-            (radio) => radio.checked
-          );
-          if (!quotePolicySelected) {
-            quotePolicyError.classList.remove("hidden");
-            isValid = false;
-          } else {
-            quotePolicyError.classList.add("hidden");
-          }
-          if (!policyAction.value) {
-            policyActionError.classList.remove("hidden");
-            isValid = false;
-          } else {
-            policyActionError.classList.add("hidden");
-          }
-          if (policyAction.value === "Replace Vehicle") {
-            if (!policyNumberInput.value.trim()) {
-              policyNumberInput.classList.add("error");
-              policyNumberError.classList.remove("hidden");
-              isValid = false;
-            } else {
-              policyNumberInput.classList.remove("error");
-              policyNumberError.classList.add("hidden");
-            }
-            if (!lobInput.value) {
-              lobInput.classList.add("error");
-              lobError.classList.remove("hidden");
-              isValid = false;
-            } else {
-              lobInput.classList.remove("error");
-              lobError.classList.add("hidden");
-            }
-            if (policyNumberInput.value.trim() && lobInput.value) {
-              if (!effectiveDateInput.value) {
-                effectiveDateInput.classList.add("error");
-                effectiveDateError.classList.remove("hidden");
-                isValid = false;
-              } else {
-                effectiveDateInput.classList.remove("error");
-                effectiveDateError.classList.add("hidden");
-              }
-            }
-            if (!vin1Radios[0].checked && !vin1Radios[1].checked) {
-              vin1SelectError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              vin1Radios[0].checked &&
-              vin1InputSection.classList.contains("hidden") === false &&
-              !vin1Input.value.trim()
-            ) {
-              vin1InputError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              vin1Radios[0].checked &&
-              vin1Input.value.trim() &&
-              !vin2Radios[0].checked &&
-              !vin2Radios[1].checked
-            ) {
-              vin2SelectError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              vin2Radios[0].checked &&
-              vin2InputSection.classList.contains("hidden") === false &&
-              !vin2Input.value.trim()
-            ) {
-              vin2InputError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              !vehUseSection.classList.contains("hidden") &&
-              !vehUseInput.value
-            ) {
-              vehUseError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              !ownershipSection.classList.contains("hidden") &&
-              !ownershipInput.value
-            ) {
-              ownershipError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              !annualMilesSection.classList.contains("hidden") &&
-              !annMilesInput.value.trim()
-            ) {
-              annualMilesError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              !purchasedNewSection.classList.contains("hidden") &&
-              ![...vehNewRadios].some((r) => r.checked)
-            ) {
-              vehNewError.classList.remove("hidden");
-              isValid = false;
-            }
-            if (
-              !yearsOwnedSection.classList.contains("hidden") &&
-              !yearsOwnedInput.value.trim()
-            ) {
-              yearsOwnedError.classList.remove("hidden");
-              isValid = false;
-            }
-
-            // Deductible validation when displayed
-            if (!deductiblesSection.classList.contains("hidden")) {
-              if (!compDeductibleInput.value) {
-                compDeductibleError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!collDeductibleInput.value) {
-                collDeductibleError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!roadsideInput.value) {
-                roadsideError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!lossOfUseInput.value) {
-                lossOfUseError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!loanLeaseInput.value) {
-                loanLeaseError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!avEqInput.value) {
-                avEqError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!oemInput.value) {
-                oemError.classList.remove("hidden");
-                isValid = false;
-              }
-              if (!rideshareInput.value) {
-                rideshareError.classList.remove("hidden");
-                isValid = false;
-              }
-            }
-
-            // After validation but before submit:
-            if (vehUseInput.value === "Pleasure or Work/School < 4 miles") {
-              vehUseInput.value = "Pleasure or Work/School &lt; 4 miles";
-            }
-          }
-          return isValid;
-        }
-        form.addEventListener("submit", function (e) {
-          if (!validateForm()) {
-            e.preventDefault();
+        // Close dialog on ESC key
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
+            dialog.classList.add("hidden");
           }
         });
-        updateFormSections();
       });
     </script>
   </body>
