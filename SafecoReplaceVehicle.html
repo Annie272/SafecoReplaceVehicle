@@ -19,7 +19,14 @@
       .modal-bg {
         background: rgba(0, 0, 0, 0.4);
       }
-      /* Tooltip style for Roadside Assistance description */
+      /* Modal Styling */
+      #dialog {
+        transition: opacity 0.3s ease;
+      }
+      /* Scroll Lock when dialog opens */
+      body.modal-open {
+        overflow: hidden;
+      }
       .tooltip {
         position: relative;
         display: inline-block;
@@ -45,11 +52,6 @@
       .tooltip:hover .tooltiptext,
       .tooltip:focus-within .tooltiptext {
         visibility: visible;
-      }
-      /* Highlight missing fields on dialog (optional) */
-      .missing-point {
-        font-style: italic;
-        color: #b91c1c;
       }
     </style>
   </head>
@@ -83,32 +85,45 @@
             name="email"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             autocomplete="off"
+            required
           />
         </div>
 
-        <fieldset class="mb-4">
-          <legend class="block text-sm font-medium text-gray-700 mb-1">
-            Is this a quote or a change request?<span class="star">*</span>
-          </legend>
-          <div class="flex space-x-6">
+        <!-- --- Updated Select the Request Type as radio buttons --- -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Select the Request Type:<span class="star">*</span>
+          </label>
+          <div class="flex space-x-8 mt-2">
             <label class="inline-flex items-center">
               <input
                 type="radio"
-                name="00NU7000006IOzh"
+                name="requestTypeRadio"
                 value="Y"
                 class="mr-2"
-              />Yes
+                id="requestTypeQuote"
+              />
+              Quote
             </label>
             <label class="inline-flex items-center">
               <input
                 type="radio"
-                name="00NU7000006IOzh"
+                name="requestTypeRadio"
                 value="N"
                 class="mr-2"
-              />No
+                id="requestTypeEndorsement"
+              />
+              Endorsement
             </label>
           </div>
-        </fieldset>
+          <!-- Hidden input, so form submits to original Salesforce field -->
+          <input
+            type="hidden"
+            id="00NU7000006IOzh"
+            name="00NU7000006IOzh"
+            value=""
+          />
+        </div>
 
         <div class="mb-4">
           <label
@@ -121,6 +136,7 @@
             id="00NU7000005zuNN"
             name="00NU7000005zuNN"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            required
           >
             <option value="">--None--</option>
             <option value="Replace Vehicle">Replace Vehicle</option>
@@ -144,6 +160,7 @@
             name="00NU7000005zuX3"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
 
@@ -162,6 +179,7 @@
             maxlength="10"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             autocomplete="off"
+            required
           />
         </div>
       </section>
@@ -175,7 +193,7 @@
           Vehicle Details
         </h3>
 
-        <!-- VIN Old Vehicle - radio -->
+        <!-- VIN Old Vehicle -->
         <fieldset class="mb-4">
           <legend class="block text-sm font-medium text-gray-700 mb-1">
             Do you know the VIN of the Old Vehicle?<span class="star">*</span>
@@ -187,7 +205,8 @@
                 name="00NU7000006DHIv"
                 value="Y"
                 class="mr-2"
-              />Yes
+              />
+              Yes
             </label>
             <label class="inline-flex items-center">
               <input
@@ -195,7 +214,8 @@
                 name="00NU7000006DHIv"
                 value="N"
                 class="mr-2"
-              />No
+              />
+              No
             </label>
           </div>
         </fieldset>
@@ -218,7 +238,7 @@
           />
         </div>
 
-        <!-- VIN New Vehicle - radio -->
+        <!-- VIN New Vehicle -->
         <fieldset class="mb-4">
           <legend class="block text-sm font-medium text-gray-700 mb-1">
             Do you know the VIN of the New Vehicle?<span class="star">*</span>
@@ -230,7 +250,8 @@
                 name="00NU7000006NiT7"
                 value="Y"
                 class="mr-2"
-              />Yes
+              />
+              Yes
             </label>
             <label class="inline-flex items-center">
               <input
@@ -238,7 +259,8 @@
                 name="00NU7000006NiT7"
                 value="N"
                 class="mr-2"
-              />No
+              />
+              No
             </label>
           </div>
         </fieldset>
@@ -275,6 +297,7 @@
             name="00NU7000006N0iD"
             title="Vehicle Use"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            required
           >
             <option value="">--None--</option>
             <option value="Pleasure or Work/School &lt; 4 miles">
@@ -301,6 +324,7 @@
             name="00NU7000006N0wj"
             title="Ownership"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            required
           >
             <option value="">--None--</option>
             <option value="Owned">Owned</option>
@@ -324,6 +348,7 @@
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
 
@@ -338,7 +363,8 @@
                 name="00NU7000006N1MX"
                 value="Y"
                 class="mr-2"
-              />Yes
+              />
+              Yes
             </label>
             <label class="inline-flex items-center">
               <input
@@ -346,7 +372,8 @@
                 name="00NU7000006N1MX"
                 value="N"
                 class="mr-2"
-              />No
+              />
+              No
             </label>
           </div>
         </fieldset>
@@ -366,11 +393,12 @@
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
       </section>
 
-      <!-- Coverages Section -->
+      <!-- Policy Coverages Section -->
       <section
         class="bg-gray-50 border rounded-xl p-6 shadow-inner"
         aria-label="Coverages Section"
@@ -569,7 +597,7 @@
         </div>
       </section>
 
-      <!-- Additional Interest Section (initially hidden) -->
+      <!-- Additional Interest Section (conditionally shown) -->
       <section
         id="additionalInterestSection"
         class="bg-gray-50 border rounded-xl p-6 shadow-inner hidden"
@@ -591,6 +619,7 @@
             name="00NU7000006OUCn"
             title="Interest Type"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            required
           >
             <option value="">--None--</option>
             <option value="Loss Payee">Loss Payee</option>
@@ -615,6 +644,7 @@
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
 
@@ -633,6 +663,7 @@
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
 
@@ -666,6 +697,7 @@
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
 
@@ -681,6 +713,7 @@
             name="00NU7000005zvWL"
             title="Interest State"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+            required
           >
             <option value="">--None--</option>
             <option value="Arizona">Arizona</option>
@@ -758,18 +791,20 @@
 
         <div class="mb-4">
           <label
-            for="00NU7000005zw7R"
+            for="00NU7000006cbfp"
             class="block text-sm font-medium text-gray-700"
           >
             Interest Zip Code<span class="star">*</span>
           </label>
           <input
-            id="00NU7000005zw7R"
-            name="00NU7000005zw7R"
+            id="00NU7000006cbfp"
+            maxlength="30"
+            name="00NU7000006cbfp"
             size="20"
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
+            required
           />
         </div>
       </section>
@@ -790,13 +825,17 @@
       <input
         type="hidden"
         name="first_name"
-        value="Safeco-New-7.0 Check Trial"
+        value="Safeco-New-13.0 Check Trial"
       />
       <input type="hidden" name="last_name" value="Test" />
       <input type="hidden" name="status" value="New" />
       <input type="hidden" name="phone" value="28436836129" />
       <input type="hidden" name="lead_source" value="Web Form" />
-      <input type="hidden" name="company" value="Caelius Test Safeco New 7.0" />
+      <input
+        type="hidden"
+        name="company"
+        value="Caelius Test Safeco New 13.0"
+      />
       <input
         type="hidden"
         name="Debug_Notes__c"
@@ -847,7 +886,7 @@
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Pikaday for Effective Date
+        // Pikaday datepicker for Effective Date field
         new Pikaday({
           field: document.getElementById("00NU7000005zuLl"),
           format: "MM/DD/YYYY",
@@ -863,14 +902,71 @@
           },
         });
 
-        // Fields requiring validation for main sections
+        // Map radio buttons for Request Type to hidden input
+        const quoteRadio = document.getElementById("requestTypeQuote");
+        const endRadio = document.getElementById("requestTypeEndorsement");
+        const sfHiddenRequestType = document.getElementById("00NU7000006IOzh");
+
+        function updateRequestTypeHidden() {
+          if (quoteRadio.checked) sfHiddenRequestType.value = "Y";
+          else if (endRadio.checked) sfHiddenRequestType.value = "N";
+          else sfHiddenRequestType.value = "";
+        }
+        quoteRadio.addEventListener("change", updateRequestTypeHidden);
+        endRadio.addEventListener("change", updateRequestTypeHidden);
+        updateRequestTypeHidden();
+
+        // Show/hide Additional Interest Section based on Ownership
+        const ownershipSelect = document.getElementById("00NU7000006N0wj");
+        const additionalInterestSection = document.getElementById(
+          "additionalInterestSection"
+        );
+
+        function toggleAdditionalInterestSection() {
+          const val = ownershipSelect.value;
+          if (val === "Owned" || val === "") {
+            additionalInterestSection.classList.add("hidden");
+          } else if (val === "Financed" || val === "Leased") {
+            additionalInterestSection.classList.remove("hidden");
+          }
+        }
+        ownershipSelect.addEventListener(
+          "change",
+          toggleAdditionalInterestSection
+        );
+        toggleAdditionalInterestSection();
+
+        // Years Vehicle Owned logic based on Vehicle purchased new?
+        const vehPurchasedRadios = document.querySelectorAll(
+          'input[name="00NU7000006N1MX"]'
+        );
+        const yearsOwnedInput = document.getElementById("00NU7000006N1Pl");
+
+        function updateYearsOwnedField() {
+          let purchasedNewVal = null;
+          for (const r of vehPurchasedRadios) {
+            if (r.checked) {
+              purchasedNewVal = r.value;
+              break;
+            }
+          }
+          if (purchasedNewVal === "Y") {
+            yearsOwnedInput.value = "0";
+            yearsOwnedInput.readOnly = true;
+          } else {
+            if (yearsOwnedInput.value === "0") yearsOwnedInput.value = "";
+            yearsOwnedInput.readOnly = false;
+          }
+        }
+        vehPurchasedRadios.forEach((radio) => {
+          radio.addEventListener("change", updateYearsOwnedField);
+        });
+        updateYearsOwnedField();
+
+        // Required fields configuration
         const requiredFields = [
-          // Policy Changes
           { id: "email", label: "Email", type: "email" },
-          {
-            radioGroupName: "00NU7000006IOzh",
-            label: "Is this a quote or a change request?",
-          },
+          { id: "00NU7000006IOzh", label: "Select the Request Type" },
           { id: "00NU7000005zuNN", label: "Policy Action" },
           { id: "00NU7000005zuX3", label: "Policy Number" },
           {
@@ -879,7 +975,7 @@
             type: "date",
           },
 
-          // Vehicle Details (radio groups for VIN questions)
+          // Vehicle Details required
           {
             radioGroupName: "00NU7000006DHIv",
             label: "Do you know the VIN of the Old Vehicle?",
@@ -900,17 +996,40 @@
             radioGroupName: "00NU7000006N1MX",
             label: "Vehicle purchased new?",
           },
+          { id: "00NU7000006N1Pl", label: "Years Vehicle Owned" },
         ];
 
-        // Additional Interest fields (all mandatory except Address Line 2)
+        // Additional Interest required fields when section shown
         const additionalInterestFields = [
           { id: "00NU7000006OUCn", label: "Interest Type" },
           { id: "00NU7000006YQuN", label: "Interest Name" },
           { id: "00NU7000006YRFF", label: "Interest Address" },
+          // Interest Address Line 2 not mandatory
           { id: "city", label: "Interest City" },
           { id: "00NU7000005zvWL", label: "Interest State" },
-          { id: "00NU7000005zw7R", label: "Interest Zip Code" },
+          { id: "00NU7000006cbfp", label: "Interest Zip Code" },
         ];
+
+        // Policy Coverages fields for optional validation
+        const coverageFields = [
+          "00NU7000006NdwT", // Comprehensive Deductible
+          "00NU7000006Ne7l", // Collision Deductible
+          "00NU7000006NeZB", // Roadside Assistance
+          "00NU7000006Nenh", // Loss of Use
+          "00NU7000006Nf8f", // Auto Loan/Lease Coverage
+          "00NU7000006Ngj4", // A/V & Customized Equipment
+          "00NU7000006NiHp", // Original Parts Replacement / OEM
+          "00NU7000006NiOH", // Lmtd Rideshare & Delivery Network
+        ]
+          .map((id) => document.getElementById(id))
+          .filter((el) => el !== null);
+
+        // Reference coverage selects - used in cross validation
+        const comprehensiveDeductible =
+          document.getElementById("00NU7000006NdwT");
+        const collisionDeductible = document.getElementById("00NU7000006Ne7l");
+        const roadsideAssistance = document.getElementById("00NU7000006NeZB");
+        const lossOfUse = document.getElementById("00NU7000006Nenh");
 
         const form = document.getElementById("mainForm");
         const reviewBtn = document.getElementById("reviewBtn");
@@ -919,105 +1038,12 @@
         const missingFieldsList = document.getElementById("missingFieldsList");
         const proceedBtn = document.getElementById("proceedBtn");
         const editBtn = document.getElementById("editBtn");
-        const additionalInterestSection = document.getElementById(
-          "additionalInterestSection"
-        );
-        const ownershipSelect = document.getElementById("00NU7000006N0wj");
-        const yearsOwnedInput = document.getElementById("00NU7000006N1Pl");
 
-        // Coverage related selects
-        const comprehensiveDeductible =
-          document.getElementById("00NU7000006NdwT");
-        const collisionDeductible = document.getElementById("00NU7000006Ne7l");
-        const roadsideAssistance = document.getElementById("00NU7000006NeZB");
-        const lossOfUse = document.getElementById("00NU7000006Nenh");
-
-        // Tooltips for collision deductible and roadside assistance
-        const collisionWrapper = document.getElementById(
-          "collisionDeductibleWrapper"
-        );
-        const roadsideWrapper = document.getElementById(
-          "roadsideAssistanceWrapper"
-        );
-        const lossOfUseWrapper = document.getElementById("lossOfUseWrapper");
-
-        // Show/hide Additional Interest based on Ownership field selection
-        function toggleAdditionalInterestSection() {
-          const val = ownershipSelect.value;
-          if (val === "Owned" || val === "") {
-            additionalInterestSection.classList.add("hidden");
-            reviewBtn.disabled = false;
-          } else if (val === "Financed" || val === "Leased") {
-            additionalInterestSection.classList.remove("hidden");
-            reviewBtn.disabled = false;
-          }
-        }
-        ownershipSelect.addEventListener(
-          "change",
-          toggleAdditionalInterestSection
-        );
-        toggleAdditionalInterestSection();
-
-        // Vehicle purchased new? logic for years owned field (per new spec)
-        const vehPurchasedRadios = document.querySelectorAll(
-          'input[name="00NU7000006N1MX"]'
-        );
-        function updateYearsOwnedField() {
-          let purchasedNewVal = null;
-          for (const r of vehPurchasedRadios) {
-            if (r.checked) {
-              purchasedNewVal = r.value;
-              break;
-            }
-          }
-          if (purchasedNewVal === "Y") {
-            yearsOwnedInput.value = "";
-            yearsOwnedInput.readOnly = false;
-          } else {
-            yearsOwnedInput.readOnly = false;
-          }
-        }
-        vehPurchasedRadios.forEach((radio) => {
-          radio.addEventListener("change", updateYearsOwnedField);
-        });
-        updateYearsOwnedField();
-
-        // Track if Additional Interest fields edited for enabling submit
-        let additionalInterestEdited = false;
-        additionalInterestFields.forEach((field) => {
-          const el = document.getElementById(field.id);
-          if (el) {
-            el.addEventListener("input", () => {
-              additionalInterestEdited = true;
-            });
-          }
-        });
-        ownershipSelect.addEventListener("change", () => {
-          additionalInterestEdited = false;
-        });
-        comprehensiveDeductible.addEventListener("change", () => {
-          additionalInterestEdited = true;
-        });
-        collisionDeductible.addEventListener("change", () => {
-          additionalInterestEdited = true;
-        });
-        roadsideAssistance.addEventListener("change", () => {
-          additionalInterestEdited = true;
-        });
-        lossOfUse.addEventListener("change", () => {
-          additionalInterestEdited = true;
-        });
-        document
-          .getElementById("00NU7000006OUCn")
-          .addEventListener("change", () => {
-            additionalInterestEdited = true;
-          });
-
-        // Validate all required fields and also custom coverage rules
         function validateFields() {
           const missing = [];
+          const invalidFormats = [];
 
-          // Validate main required fields
+          // Validate required fields
           requiredFields.forEach((field) => {
             if (field.radioGroupName) {
               const radios = document.querySelectorAll(
@@ -1027,22 +1053,29 @@
               if (!checked) missing.push(field.label);
             } else if (field.type === "email") {
               const el = document.getElementById(field.id);
-              if (!el.value.trim() || !el.checkValidity())
+              if (!el || !el.value.trim() || !el.checkValidity())
                 missing.push(field.label);
             } else if (field.type === "date") {
-              const val = document.getElementById(field.id).value.trim();
+              const val = document.getElementById(field.id)?.value.trim() || "";
               const dateRegex =
                 /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/20[2-9]\d$/;
-              if (!val || !dateRegex.test(val)) missing.push(field.label);
+              if (!val) {
+                missing.push(field.label);
+              } else if (!dateRegex.test(val)) {
+                invalidFormats.push(field.label + " (Invalid Date Format)");
+              }
             } else {
               const el = document.getElementById(field.id);
               if (!el || !el.value.trim()) missing.push(field.label);
             }
           });
 
-          // Years Vehicle Owned special validation
+          // Years Vehicle Owned special validation and logic
           let purchasedNewVal = null;
-          for (const r of vehPurchasedRadios) {
+          const purchasedRadios = document.querySelectorAll(
+            'input[name="00NU7000006N1MX"]'
+          );
+          for (const r of purchasedRadios) {
             if (r.checked) {
               purchasedNewVal = r.value;
               break;
@@ -1053,69 +1086,84 @@
               missing.push("Years Vehicle Owned");
           }
 
-          // Additional Interest validation only if visible
+          // Additional Interest fields required if visible
           if (!additionalInterestSection.classList.contains("hidden")) {
             additionalInterestFields.forEach((field) => {
-              if (field.id === "00NU7000006YTXB") return; // Address Line 2 not mandatory
+              if (field.id === "00NU7000006YTXB") return; // Address Line 2 optional
               const el = document.getElementById(field.id);
               if (!el || !el.value.trim()) missing.push(field.label);
             });
           }
 
-          // Custom logic for Interest Type = Loss Payee
-          const interestTypeSelect = document.getElementById("00NU7000006OUCn");
-          const interestTypeVal = interestTypeSelect
-            ? interestTypeSelect.value
-            : "";
-          const compDeduct = comprehensiveDeductible.value;
-          const collDeduct = collisionDeductible.value;
-          const roadAssistVal = roadsideAssistance.value;
-          const lossUseVal = lossOfUse.value;
-          let customErrors = [];
+          // Custom business logic validations
+          const customErrors = [];
 
-          if (interestTypeVal === "Loss Payee") {
-            if (
-              (!compDeduct || compDeduct === "") &&
-              (!collDeduct || collDeduct === "")
-            ) {
-              customErrors.push(
-                "Vehicle with Loss Payee Additional Interest must have Comprehensive Deductible or Collision Deductible Coverage or change the Interest Type."
-              );
+          // Check Interest Type specific logic if visible
+          if (!additionalInterestSection.classList.contains("hidden")) {
+            const interestTypeSelect =
+              document.getElementById("00NU7000006OUCn");
+            const interestTypeVal = interestTypeSelect
+              ? interestTypeSelect.value
+              : "";
+            const compDeduct = comprehensiveDeductible
+              ? comprehensiveDeductible.value
+              : "";
+            const collDeduct = collisionDeductible
+              ? collisionDeductible.value
+              : "";
+            const roadAssistVal = roadsideAssistance
+              ? roadsideAssistance.value
+              : "";
+            const lossUseVal = lossOfUse ? lossOfUse.value : "";
+
+            if (interestTypeVal === "Loss Payee") {
+              if (
+                (!compDeduct || compDeduct === "") &&
+                (!collDeduct || collDeduct === "")
+              ) {
+                customErrors.push(
+                  "Vehicle with Loss Payee Additional Interest must have Comprehensive Deductible or Collision Deductible Coverage or change the Interest Type."
+                );
+              }
+            }
+
+            if (roadAssistVal === "EAP") {
+              const lossUseNumber = parseInt(lossUseVal) || 0;
+              if (
+                !compDeduct ||
+                compDeduct === "" ||
+                !collDeduct ||
+                collDeduct === "" ||
+                lossUseNumber < 35
+              ) {
+                customErrors.push(
+                  "When Roadside Assistance is EAP, Comprehensive Deductible and Collision Deductible cannot be None and Loss of Use must be 35/per day or above."
+                );
+              }
             }
           }
 
-          if (roadAssistVal === "EAP") {
-            const lossUseNumber = parseInt(lossUseVal) || 0;
-            if (
-              !compDeduct ||
-              compDeduct === "" ||
-              !collDeduct ||
-              collDeduct === "" ||
-              lossUseNumber < 35
-            ) {
-              customErrors.push(
-                "When Roadside Assistance is EAP, Comprehensive Deductible and Collision Deductible cannot be None and Loss of Use must be 35/per day or above."
-              );
-            }
-          }
-
-          return { missing, customErrors };
+          return { missing, invalidFormats, customErrors };
         }
 
-        // Prevent native submit
+        // Prevent native submit default
         form.addEventListener("submit", (e) => e.preventDefault());
 
         reviewBtn.addEventListener("click", () => {
-          const { missing, customErrors } = validateFields();
+          const { missing, invalidFormats, customErrors } = validateFields();
 
-          // Block submit if missing required fields
-          // Block submit also if custom rules blocked (Loss Payee or EAP cases)
-          if (missing.length || customErrors.length) {
+          if (missing.length || invalidFormats.length || customErrors.length) {
             let errorsHTML = "";
             if (missing.length) {
               errorsHTML +=
-                "<strong>Below Mandatory Fields are missing and the Team will contact you shortly.</strong><ul>" +
+                "<strong>Below Mandatory Fields are missing and the Team will contact you shortly:</strong><ul>" +
                 missing.map((f) => `<li>${f}</li>`).join("") +
+                "</ul>";
+            }
+            if (invalidFormats.length) {
+              errorsHTML +=
+                "<strong>Fields with invalid format:</strong><ul>" +
+                invalidFormats.map((f) => `<li>${f}</li>`).join("") +
                 "</ul>";
             }
             if (customErrors.length) {
@@ -1125,40 +1173,43 @@
                 "</ul>";
             }
             dialogTitle.innerHTML = errorsHTML;
-            missingFieldsList.innerHTML = ""; // We put all errors in dialogTitle for clear top display
+            missingFieldsList.innerHTML = "";
             proceedBtn.disabled = true;
             dialog.classList.remove("hidden");
+            document.body.classList.add("modal-open");
             return;
           }
 
-          // No errors: enable submit
           dialogTitle.textContent =
             "All mandatory fields are completed. Ready to submit your request?";
           missingFieldsList.innerHTML = "";
           proceedBtn.disabled = false;
           dialog.classList.remove("hidden");
+          document.body.classList.add("modal-open");
         });
 
         editBtn.addEventListener("click", () => {
           dialog.classList.add("hidden");
+          document.body.classList.remove("modal-open");
         });
 
         proceedBtn.addEventListener("click", () => {
           dialog.classList.add("hidden");
+          document.body.classList.remove("modal-open");
           form.submit();
         });
 
-        // Close dialog on click outside
         window.addEventListener("click", (e) => {
           if (e.target === dialog) {
             dialog.classList.add("hidden");
+            document.body.classList.remove("modal-open");
           }
         });
 
-        // Close dialog on ESC key
         window.addEventListener("keydown", (e) => {
           if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
             dialog.classList.add("hidden");
+            document.body.classList.remove("modal-open");
           }
         });
       });
