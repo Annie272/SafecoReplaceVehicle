@@ -194,9 +194,13 @@
         </h3>
 
         <!-- VIN Old Vehicle -->
-        <fieldset class="mb-4">
+        <fieldset class="mb-4 tooltip" tabindex="0">
           <legend class="block text-sm font-medium text-gray-700 mb-1">
             Do you know the VIN of the Old Vehicle?<span class="star">*</span>
+            <span class="tooltiptext"
+              >If "VIN Known" is set to No, the request will automatically be
+              sent for manual processing.</span
+            >
           </legend>
           <div class="flex space-x-6">
             <label class="inline-flex items-center">
@@ -239,9 +243,13 @@
         </div>
 
         <!-- VIN New Vehicle -->
-        <fieldset class="mb-4">
+        <fieldset class="mb-4 tooltip" tabindex="0">
           <legend class="block text-sm font-medium text-gray-700 mb-1">
             Do you know the VIN of the New Vehicle?<span class="star">*</span>
+            <span class="tooltiptext"
+              >If "VIN Known" is set to No, the request will automatically be
+              sent for manual processing.</span
+            >
           </legend>
           <div class="flex space-x-6">
             <label class="inline-flex items-center">
@@ -300,7 +308,7 @@
             required
           >
             <option value="">--None--</option>
-            <option value="Pleasure or Work/School &lt; 4 miles">
+            <option value="Pleasure or Work/School &lt; 4  miles">
               Pleasure or Work/School &lt; 4 miles
             </option>
             <option value="Work/School 4 or more miles">
@@ -480,14 +488,11 @@
             <option value="Roadside Assistance">Roadside Assistance</option>
           </select>
           <div class="tooltiptext">
-            <strong>EAP:</strong> includes Emergency expenses, Disabled vehicle-
-            transportation expense, Key lockout-RV, Personal Property Coverage,
-            Roadside assistance.<br /><br />
-            <strong>Roadside Assistance:</strong> 1 hour of labor at scene,
-            battery jump start, flat tire change, emergency fuel and fluid
-            delivery (customer pays for cost of fuel/fluid), lockout assistance,
-            towing to nearest repair facility, winching for up to 100 ft from
-            road.<br /><br />
+            <strong>EAP(Emergency assistance package):</strong> Includes all the
+            benefits of roadside assistance plus coverage for lodging,
+            transportation and more.<br /><br />
+            <strong>Roadside Assistance:</strong> 24-hour help for breakdowns,
+            including flat tire changes, jump-starts, towing and more.<br /><br />
             When Roadside Assistance is <em>EAP</em>, Comprehensive Deductible
             and Collision Deductible can’t be none, and Loss of Use must be
             35/per day or above.
@@ -513,14 +518,22 @@
             <option value="50/per day">50/per day</option>
             <option value="75/per day">75/per day</option>
           </select>
+          <div class="tooltiptext">
+            Provides for a rental car while a vehicle is being repaired for a
+            covered loss.
+          </div>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 tooltip" tabindex="0">
           <label
             for="00NU7000006Nf8f"
             class="block text-sm font-medium text-gray-700"
           >
             Auto Loan/Lease Coverage
+            <span class="tooltiptext"
+              >(Covers the gap between the cash value of a loss and what the
+              customer owes on a lease or loan.)</span
+            >
           </label>
           <select
             id="00NU7000006Nf8f"
@@ -560,12 +573,17 @@
           </select>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 tooltip" tabindex="0">
           <label
             for="00NU7000006NiHp"
             class="block text-sm font-medium text-gray-700"
           >
             Original Parts Replacement / OEM
+            <span class="tooltiptext"
+              >(Extends comp and collision coverage to repair or replace damaged
+              property with original equipment manufactured parts, when
+              available.)</span
+            >
           </label>
           <select
             id="00NU7000006NiHp"
@@ -825,7 +843,7 @@
       <input
         type="hidden"
         name="first_name"
-        value="Safeco-New-13.0 Check Trial"
+        value="Safeco-New-15.0 Check Trial"
       />
       <input type="hidden" name="last_name" value="Test" />
       <input type="hidden" name="status" value="New" />
@@ -834,7 +852,7 @@
       <input
         type="hidden"
         name="company"
-        value="Caelius Test Safeco New 13.0"
+        value="Caelius Test Safeco New 15.0"
       />
       <input
         type="hidden"
