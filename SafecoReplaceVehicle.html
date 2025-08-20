@@ -65,7 +65,7 @@
       novalidate
     >
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-        Safeco Form
+        Replace Vehicle Safeco Form
       </h2>
 
       <!-- Policy Changes Section -->
@@ -471,12 +471,25 @@
         </div>
 
         <div class="mb-4 tooltip" tabindex="0" id="roadsideAssistanceWrapper">
+          <!-- Disclaimer Tooltip Box -->
+          <div
+            class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-2 text-sm"
+            role="alert"
+          >
+            <strong>Disclaimer:</strong>
+            <br />If Roadside Assistance coverage is selected on one vehicle,
+            all vehicles on the policy must carry Roadside Assistance. <br />If
+            EAP coverage is selected on one vehicle, all vehicles on the policy
+            must carry EAP.
+          </div>
+
           <label
             for="00NU7000006NeZB"
             class="block text-sm font-medium text-gray-700"
           >
             Roadside Assistance
           </label>
+
           <select
             id="00NU7000006NeZB"
             name="00NU7000006NeZB"
@@ -487,9 +500,10 @@
             <option value="EAP">EAP</option>
             <option value="Roadside Assistance">Roadside Assistance</option>
           </select>
+
           <div class="tooltiptext">
-            <strong>EAP(Emergency assistance package):</strong> Includes all the
-            benefits of roadside assistance plus coverage for lodging,
+            <strong>EAP (Emergency assistance package):</strong> Includes all
+            the benefits of roadside assistance plus coverage for lodging,
             transportation and more.<br /><br />
             <strong>Roadside Assistance:</strong> 24-hour help for breakdowns,
             including flat tire changes, jump-starts, towing and more.<br /><br />
