@@ -67,7 +67,7 @@
       novalidate
     >
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-        Replace Vehicle Safeco Form
+        Add Vehicle Safeco Form
       </h2>
 
       <!-- Policy Changes Section -->
@@ -195,62 +195,12 @@
           Vehicle Details
         </h3>
 
-        <!-- VIN Old Vehicle -->
-        <fieldset class="mb-4 tooltip" tabindex="0">
-          <legend class="block text-sm font-medium text-gray-700 mb-1">
-            Do you know the VIN of the Old Vehicle?<span class="star">*</span>
-            <span class="tooltiptext"
-              >If "VIN Known" is set to No, the request will automatically be
-              sent for manual processing.</span
-            >
-          </legend>
-          <div class="flex space-x-6">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                name="00NU7000006DHIv"
-                value="Y"
-                class="mr-2"
-              />
-              Yes
-            </label>
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                name="00NU7000006DHIv"
-                value="N"
-                class="mr-2"
-              />
-              No
-            </label>
-          </div>
-        </fieldset>
-
-        <div class="mb-4">
-          <label
-            for="00NU700000616Sv"
-            class="block text-sm font-medium text-gray-700"
-          >
-            VIN Number of Old Vehicle<span class="star">*</span>
-          </label>
-          <input
-            id="00NU700000616Sv"
-            name="00NU700000616Sv"
-            maxlength="255"
-            size="20"
-            type="text"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            autocomplete="off"
-          />
-        </div>
-
-        <!-- VIN New Vehicle -->
+        <!-- VIN NEW VEHICLE ONLY (Old Vehicle removed as requested) -->
         <fieldset class="mb-4 tooltip" tabindex="0">
           <legend class="block text-sm font-medium text-gray-700 mb-1">
             Do you know the VIN of the New Vehicle?<span class="star">*</span>
             <span class="tooltiptext"
-              >If "VIN Known" is set to No, the request will automatically be
-              sent for manual processing.</span
+              >If "VIN Known" is set to No, the request will go manual.</span
             >
           </legend>
           <div class="flex space-x-6">
@@ -286,13 +236,13 @@
             id="00NU7000006Knh3"
             name="00NU7000006Knh3"
             maxlength="255"
-            size="20"
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             autocomplete="off"
           />
         </div>
 
+        <!-- Vehicle Use -->
         <div class="mb-4">
           <label
             for="00NU7000006N0iD"
@@ -305,7 +255,6 @@
           <select
             id="00NU7000006N0iD"
             name="00NU7000006N0iD"
-            title="Vehicle Use"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             required
           >
@@ -322,6 +271,24 @@
           </select>
         </div>
 
+        <!-- Conditional Mileage One Way -->
+        <div id="mileageOneWayWrapper" class="mb-4 hidden">
+          <label
+            for="00NU7000006kjI1"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Mileage One Way<span class="star">*</span>
+          </label>
+          <input
+            id="00NU7000006kjI1"
+            name="00NU7000006kjI1"
+            maxlength="255"
+            type="text"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
+          />
+        </div>
+
+        <!-- Ownership -->
         <div class="mb-4">
           <label
             for="00NU7000006N0wj"
@@ -332,7 +299,6 @@
           <select
             id="00NU7000006N0wj"
             name="00NU7000006N0wj"
-            title="Ownership"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
             required
           >
@@ -354,10 +320,8 @@
             id="00NU7000006N0zx"
             name="00NU7000006N0zx"
             maxlength="255"
-            size="20"
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            autocomplete="off"
             required
           />
         </div>
@@ -399,13 +363,46 @@
             id="00NU7000006N1Pl"
             name="00NU7000006N1Pl"
             maxlength="255"
-            size="20"
             type="text"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
-            autocomplete="off"
             required
           />
         </div>
+
+        <!-- New Ridesharing/Delivery -->
+        <fieldset class="mb-4 tooltip" tabindex="0">
+          <legend class="block text-sm font-medium text-gray-700 mb-1">
+            Do you use the vehicle for ridesharing or delivery services?<span
+              class="star"
+              >*</span
+            >
+            <span class="tooltiptext">
+              If this vehicle is used to drive for a Transportation Network or
+              Delivery Network Company (e.g., Uber, Lyft, UberEats, Doordash,
+              etc.), “Yes” should be selected.
+            </span>
+          </legend>
+          <div class="flex space-x-6">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006kjY9"
+                value="Y"
+                class="mr-2"
+              />
+              Yes
+            </label>
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="00NU7000006kjY9"
+                value="N"
+                class="mr-2"
+              />
+              No
+            </label>
+          </div>
+        </fieldset>
       </section>
 
       <!-- Policy Coverages Section -->
@@ -936,7 +933,7 @@
           },
         });
 
-        // Map radio buttons for Request Type to hidden input
+        // Map request type radios to hidden field
         const quoteRadio = document.getElementById("requestTypeQuote");
         const endRadio = document.getElementById("requestTypeEndorsement");
         const sfHiddenRequestType = document.getElementById("00NU7000006IOzh");
@@ -950,17 +947,16 @@
         endRadio.addEventListener("change", updateRequestTypeHidden);
         updateRequestTypeHidden();
 
-        // Show/hide Additional Interest Section based on Ownership
+        // Ownership toggle Additional Interest
         const ownershipSelect = document.getElementById("00NU7000006N0wj");
         const additionalInterestSection = document.getElementById(
           "additionalInterestSection"
         );
-
         function toggleAdditionalInterestSection() {
           const val = ownershipSelect.value;
           if (val === "Owned" || val === "") {
             additionalInterestSection.classList.add("hidden");
-          } else if (val === "Financed" || val === "Leased") {
+          } else {
             additionalInterestSection.classList.remove("hidden");
           }
         }
@@ -970,12 +966,11 @@
         );
         toggleAdditionalInterestSection();
 
-        // Years Vehicle Owned logic based on Vehicle purchased new?
+        // Vehicle New toggle Years Owned
         const vehPurchasedRadios = document.querySelectorAll(
           'input[name="00NU7000006N1MX"]'
         );
         const yearsOwnedInput = document.getElementById("00NU7000006N1Pl");
-
         function updateYearsOwnedField() {
           let purchasedNewVal = null;
           for (const r of vehPurchasedRadios) {
@@ -992,12 +987,29 @@
             yearsOwnedInput.readOnly = false;
           }
         }
-        vehPurchasedRadios.forEach((radio) => {
-          radio.addEventListener("change", updateYearsOwnedField);
-        });
+        vehPurchasedRadios.forEach((radio) =>
+          radio.addEventListener("change", updateYearsOwnedField)
+        );
         updateYearsOwnedField();
 
-        // Required fields configuration
+        // Commute Mileage logic
+        const commuteSelect = document.getElementById("00NU7000006N0iD");
+        const mileageOneWayWrapper = document.getElementById(
+          "mileageOneWayWrapper"
+        );
+        const mileageOneWayInput = document.getElementById("00NU7000006kjI1");
+        function toggleMileageField() {
+          if (commuteSelect.value === "Work/School 4 or more miles") {
+            mileageOneWayWrapper.classList.remove("hidden");
+          } else {
+            mileageOneWayWrapper.classList.add("hidden");
+            mileageOneWayInput.value = "";
+          }
+        }
+        commuteSelect.addEventListener("change", toggleMileageField);
+        toggleMileageField();
+
+        // Required fields
         const requiredFields = [
           { id: "email", label: "Email", type: "email" },
           { id: "00NU7000006IOzh", label: "Select the Request Type" },
@@ -1009,17 +1021,12 @@
             type: "date",
           },
 
-          // Vehicle Details required
-          {
-            radioGroupName: "00NU7000006DHIv",
-            label: "Do you know the VIN of the Old Vehicle?",
-          },
-          { id: "00NU700000616Sv", label: "VIN Number of Old Vehicle" },
+          // Vehicle Details required (Old VIN removed)
+          { id: "00NU7000006Knh3", label: "VIN Number of New Vehicle" },
           {
             radioGroupName: "00NU7000006NiT7",
             label: "Do you know the VIN of the New Vehicle?",
           },
-          { id: "00NU7000006Knh3", label: "VIN Number of New Vehicle" },
           {
             id: "00NU7000006N0iD",
             label: "Is the vehicle used to commute to work/ school?",
@@ -1031,9 +1038,14 @@
             label: "Vehicle purchased new?",
           },
           { id: "00NU7000006N1Pl", label: "Years Vehicle Owned" },
+          {
+            radioGroupName: "00NU7000006kjY9",
+            label:
+              "Do you use the vehicle for ridesharing or delivery services?",
+          },
         ];
 
-        // Additional Interest required fields
+        // Additional Interest required
         const additionalInterestFields = [
           { id: "00NU7000006OUCn", label: "Interest Type" },
           { id: "00NU7000006YQuN", label: "Interest Name" },
@@ -1043,7 +1055,7 @@
           { id: "00NU7000006cbfp", label: "Interest Zip Code" },
         ];
 
-        // Coverage fields (references)
+        // Coverage selects
         const comprehensiveDeductible =
           document.getElementById("00NU7000006NdwT");
         const collisionDeductible = document.getElementById("00NU7000006Ne7l");
@@ -1059,7 +1071,7 @@
         const proceedBtn = document.getElementById("proceedBtn");
         const editBtn = document.getElementById("editBtn");
 
-        // Clear highlights
+        // Highlights
         function clearHighlights() {
           [
             comprehensiveDeductible,
@@ -1070,7 +1082,7 @@
           ].forEach((el) => el && el.classList.remove("error-highlight"));
         }
 
-        // Validation
+        // Validate required
         function validateFields() {
           const missing = [];
           const invalidFormats = [];
@@ -1101,7 +1113,7 @@
             }
           });
 
-          // Years Vehicle Owned check
+          // Special: Years Owned must exist if not "Y"
           let purchasedNewVal = null;
           vehPurchasedRadios.forEach((r) => {
             if (r.checked) purchasedNewVal = r.value;
@@ -1111,7 +1123,7 @@
               missing.push("Years Vehicle Owned");
           }
 
-          // Additional Interest check
+          // Additional Interest required if visible
           if (!additionalInterestSection.classList.contains("hidden")) {
             additionalInterestFields.forEach((field) => {
               if (field.id === "00NU7000006YTXB") return;
@@ -1120,15 +1132,21 @@
             });
           }
 
+          // Conditional Mileage check
+          if (commuteSelect.value === "Work/School 4 or more miles") {
+            if (!mileageOneWayInput.value.trim())
+              missing.push("Mileage One Way");
+          }
+
           return { missing, invalidFormats };
         }
 
-        // Custom business validations for ONLY 2 cases
+        // Custom business logic
         function validateCustomCases() {
           let customErrors = [];
           clearHighlights();
 
-          // CASE 1: Loss Payee => comp or collision required
+          // CASE 1: Loss Payee requires comp/collision
           if (
             additionalInterestSection &&
             !additionalInterestSection.classList.contains("hidden") &&
@@ -1149,7 +1167,7 @@
             }
           }
 
-          // CASE 2: EAP => Comp + Collision required, Loss of Use >=35
+          // CASE 2: Roadside = EAP requires comp+collision+loss>=35
           if (roadsideAssistance && roadsideAssistance.value === "EAP") {
             const lossVal = lossOfUse ? lossOfUse.value : "";
             const lossNum = lossVal ? parseInt(lossVal) || 0 : 0;
@@ -1207,7 +1225,7 @@
             }
 
             dialogTitle.innerHTML = errorsHTML;
-            proceedBtn.disabled = customErrors.length > 0; // Blocks submit only for case1/case2
+            proceedBtn.disabled = customErrors.length > 0; // block for Case1 & Case2
             dialog.classList.remove("hidden");
             document.body.classList.add("modal-open");
             return;
