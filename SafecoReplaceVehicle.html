@@ -19,11 +19,9 @@
       .modal-bg {
         background: rgba(0, 0, 0, 0.4);
       }
-      /* Modal Styling */
       #dialog {
         transition: opacity 0.3s ease;
       }
-      /* Scroll Lock when dialog opens */
       body.modal-open {
         overflow: hidden;
       }
@@ -52,6 +50,10 @@
       .tooltip:hover .tooltiptext,
       .tooltip:focus-within .tooltiptext {
         visibility: visible;
+      }
+      .error-highlight {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 1px #ef4444;
       }
     </style>
   </head>
@@ -1031,37 +1033,23 @@
           { id: "00NU7000006N1Pl", label: "Years Vehicle Owned" },
         ];
 
-        // Additional Interest required fields when section shown
+        // Additional Interest required fields
         const additionalInterestFields = [
           { id: "00NU7000006OUCn", label: "Interest Type" },
           { id: "00NU7000006YQuN", label: "Interest Name" },
           { id: "00NU7000006YRFF", label: "Interest Address" },
-          // Interest Address Line 2 not mandatory
           { id: "city", label: "Interest City" },
           { id: "00NU7000005zvWL", label: "Interest State" },
           { id: "00NU7000006cbfp", label: "Interest Zip Code" },
         ];
 
-        // Policy Coverages fields for optional validation
-        const coverageFields = [
-          "00NU7000006NdwT", // Comprehensive Deductible
-          "00NU7000006Ne7l", // Collision Deductible
-          "00NU7000006NeZB", // Roadside Assistance
-          "00NU7000006Nenh", // Loss of Use
-          "00NU7000006Nf8f", // Auto Loan/Lease Coverage
-          "00NU7000006Ngj4", // A/V & Customized Equipment
-          "00NU7000006NiHp", // Original Parts Replacement / OEM
-          "00NU7000006NiOH", // Lmtd Rideshare & Delivery Network
-        ]
-          .map((id) => document.getElementById(id))
-          .filter((el) => el !== null);
-
-        // Reference coverage selects - used in cross validation
+        // Coverage fields (references)
         const comprehensiveDeductible =
           document.getElementById("00NU7000006NdwT");
         const collisionDeductible = document.getElementById("00NU7000006Ne7l");
         const roadsideAssistance = document.getElementById("00NU7000006NeZB");
         const lossOfUse = document.getElementById("00NU7000006Nenh");
+        const interestType = document.getElementById("00NU7000006OUCn");
 
         const form = document.getElementById("mainForm");
         const reviewBtn = document.getElementById("reviewBtn");
@@ -1071,11 +1059,22 @@
         const proceedBtn = document.getElementById("proceedBtn");
         const editBtn = document.getElementById("editBtn");
 
+        // Clear highlights
+        function clearHighlights() {
+          [
+            comprehensiveDeductible,
+            collisionDeductible,
+            roadsideAssistance,
+            lossOfUse,
+            interestType,
+          ].forEach((el) => el && el.classList.remove("error-highlight"));
+        }
+
+        // Validation
         function validateFields() {
           const missing = [];
           const invalidFormats = [];
 
-          // Validate required fields
           requiredFields.forEach((field) => {
             if (field.radioGroupName) {
               const radios = document.querySelectorAll(
@@ -1090,7 +1089,7 @@
             } else if (field.type === "date") {
               const val = document.getElementById(field.id)?.value.trim() || "";
               const dateRegex =
-                /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/20[2-9]\d$/;
+                /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[1])\/20[2-9]\d$/;
               if (!val) {
                 missing.push(field.label);
               } else if (!dateRegex.test(val)) {
@@ -1102,93 +1101,95 @@
             }
           });
 
-          // Years Vehicle Owned special validation and logic
+          // Years Vehicle Owned check
           let purchasedNewVal = null;
-          const purchasedRadios = document.querySelectorAll(
-            'input[name="00NU7000006N1MX"]'
-          );
-          for (const r of purchasedRadios) {
-            if (r.checked) {
-              purchasedNewVal = r.value;
-              break;
-            }
-          }
+          vehPurchasedRadios.forEach((r) => {
+            if (r.checked) purchasedNewVal = r.value;
+          });
           if (purchasedNewVal === "N" || purchasedNewVal === null) {
             if (!yearsOwnedInput.value.trim())
               missing.push("Years Vehicle Owned");
           }
 
-          // Additional Interest fields required if visible
+          // Additional Interest check
           if (!additionalInterestSection.classList.contains("hidden")) {
             additionalInterestFields.forEach((field) => {
-              if (field.id === "00NU7000006YTXB") return; // Address Line 2 optional
+              if (field.id === "00NU7000006YTXB") return;
               const el = document.getElementById(field.id);
               if (!el || !el.value.trim()) missing.push(field.label);
             });
           }
 
-          // Custom business logic validations
-          const customErrors = [];
+          return { missing, invalidFormats };
+        }
 
-          // Check Interest Type specific logic if visible
-          if (!additionalInterestSection.classList.contains("hidden")) {
-            const interestTypeSelect =
-              document.getElementById("00NU7000006OUCn");
-            const interestTypeVal = interestTypeSelect
-              ? interestTypeSelect.value
-              : "";
-            const compDeduct = comprehensiveDeductible
-              ? comprehensiveDeductible.value
-              : "";
-            const collDeduct = collisionDeductible
-              ? collisionDeductible.value
-              : "";
-            const roadAssistVal = roadsideAssistance
-              ? roadsideAssistance.value
-              : "";
-            const lossUseVal = lossOfUse ? lossOfUse.value : "";
+        // Custom business validations for ONLY 2 cases
+        function validateCustomCases() {
+          let customErrors = [];
+          clearHighlights();
 
-            if (interestTypeVal === "Loss Payee") {
-              if (
-                (!compDeduct || compDeduct === "") &&
-                (!collDeduct || collDeduct === "")
-              ) {
-                customErrors.push(
-                  "Vehicle with Loss Payee Additional Interest must have Comprehensive Deductible or Collision Deductible Coverage or change the Interest Type."
-                );
-              }
-            }
-
-            if (roadAssistVal === "EAP") {
-              const lossUseNumber = parseInt(lossUseVal) || 0;
-              if (
-                !compDeduct ||
-                compDeduct === "" ||
-                !collDeduct ||
-                collDeduct === "" ||
-                lossUseNumber < 35
-              ) {
-                customErrors.push(
-                  "When Roadside Assistance is EAP, Comprehensive Deductible and Collision Deductible cannot be None and Loss of Use must be 35/per day or above."
-                );
-              }
+          // CASE 1: Loss Payee => comp or collision required
+          if (
+            additionalInterestSection &&
+            !additionalInterestSection.classList.contains("hidden") &&
+            interestType &&
+            interestType.value === "Loss Payee"
+          ) {
+            if (
+              (!comprehensiveDeductible.value ||
+                comprehensiveDeductible.value === "") &&
+              (!collisionDeductible.value || collisionDeductible.value === "")
+            ) {
+              customErrors.push(
+                "Vehicle with Loss Payee Additional Interest must have Comprehensive Deductible or Collision Deductible Coverage or change the Interest Type."
+              );
+              comprehensiveDeductible.classList.add("error-highlight");
+              collisionDeductible.classList.add("error-highlight");
+              interestType.classList.add("error-highlight");
             }
           }
 
-          return { missing, invalidFormats, customErrors };
+          // CASE 2: EAP => Comp + Collision required, Loss of Use >=35
+          if (roadsideAssistance && roadsideAssistance.value === "EAP") {
+            const lossVal = lossOfUse ? lossOfUse.value : "";
+            const lossNum = lossVal ? parseInt(lossVal) || 0 : 0;
+
+            if (
+              !comprehensiveDeductible.value ||
+              comprehensiveDeductible.value === "" ||
+              !collisionDeductible.value ||
+              collisionDeductible.value === "" ||
+              lossNum < 35
+            ) {
+              customErrors.push(
+                "When Roadside Assistance is EAP, Comprehensive Deductible and Collision Deductible cannot be None and Loss of Use must be 35/per day or above."
+              );
+              roadsideAssistance.classList.add("error-highlight");
+              comprehensiveDeductible.classList.add("error-highlight");
+              collisionDeductible.classList.add("error-highlight");
+              lossOfUse.classList.add("error-highlight");
+            }
+          }
+
+          return customErrors;
         }
 
-        // Prevent native submit default
+        // Prevent native submit
         form.addEventListener("submit", (e) => e.preventDefault());
 
         reviewBtn.addEventListener("click", () => {
-          const { missing, invalidFormats, customErrors } = validateFields();
+          const { missing, invalidFormats } = validateFields();
+          const customErrors = validateCustomCases();
 
-          if (missing.length || invalidFormats.length || customErrors.length) {
+          if (
+            missing.length ||
+            invalidFormats.length ||
+            customErrors.length > 0
+          ) {
             let errorsHTML = "";
             if (missing.length) {
               errorsHTML +=
-                "<strong>Below Mandatory Fields are missing and the Team will contact you shortly:</strong><ul>" +
+                "<strong>Below Mandatory Fields are missing:</strong><ul>" +
                 missing.map((f) => `<li>${f}</li>`).join("") +
                 "</ul>";
             }
@@ -1204,9 +1205,9 @@
                 customErrors.map((e) => `<li>${e}</li>`).join("") +
                 "</ul>";
             }
+
             dialogTitle.innerHTML = errorsHTML;
-            missingFieldsList.innerHTML = "";
-            proceedBtn.disabled = true;
+            proceedBtn.disabled = customErrors.length > 0; // Blocks submit only for case1/case2
             dialog.classList.remove("hidden");
             document.body.classList.add("modal-open");
             return;
@@ -1214,7 +1215,6 @@
 
           dialogTitle.textContent =
             "All mandatory fields are completed. Ready to submit your request?";
-          missingFieldsList.innerHTML = "";
           proceedBtn.disabled = false;
           dialog.classList.remove("hidden");
           document.body.classList.add("modal-open");
@@ -1237,7 +1237,6 @@
             document.body.classList.remove("modal-open");
           }
         });
-
         window.addEventListener("keydown", (e) => {
           if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
             dialog.classList.add("hidden");
